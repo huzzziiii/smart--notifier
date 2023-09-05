@@ -155,7 +155,12 @@
     <folder Name="Custom BLE">
       <file file_name="ran.cpp" />
       <file file_name="ran.h" />
+      <folder Name="Notifier Service">
+        <file file_name="notifier_service.cpp" />
+        <file file_name="notifier_service.h" />
+      </folder>
     </folder>
+    <configuration Name="Release" gcc_cplusplus_language_standard="c++20" />
   </project>
   <configuration
     Name="Release"

@@ -13,7 +13,7 @@
 #include "nrf_ble_gatt.h"
 #include "nrf_ble_qwr.h"
 
-#define DEVICE_NAME                         "Nordic_HyM"                            /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME                         "NRH-HUZ"                            /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME                   "NordicSemiconductor"                   /**< Manufacturer. Will be passed to Device Information Service. */
 
 #define APP_BLE_OBSERVER_PRIO               3                                       /**< Application's BLE observer priority. You shouldn't need to modify this value. */
@@ -34,18 +34,18 @@
 
 
 
-#define CUSTOM_SERVICE_UUID			        0x1400	      // TODO HUZZI: move into custom_service.hpp
-#define CUSTOM_VALUE_CHAR_UUID		   0x1401
+//#define CUSTOM_SERVICE_UUID			        0x1400	      // TODO HUZZI: move into custom_service.hpp
+//#define CUSTOM_VALUE_CHAR_UUID		   0x1401
 
-#define BLE_UUID_TYPE_VENDOR_BEGIN	         0x02					              /**< Vendor UUID types start at this index (128-bit). */
+			              /**< Vendor UUID types start at this index (128-bit). */
 
 
-static ble_uuid_t m_adv_uuids[] =                                   /**< Universally unique service identifiers. */
-{
-    {BLE_UUID_HEART_RATE_SERVICE, BLE_UUID_TYPE_BLE},
-    {BLE_UUID_BATTERY_SERVICE, BLE_UUID_TYPE_BLE},
-    {BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}
-};
+//static ble_uuid_t m_adv_uuids[] =                                   /**< Universally unique service identifiers. */
+//{
+//    {BLE_UUID_HEART_RATE_SERVICE, BLE_UUID_TYPE_BLE},
+//    {BLE_UUID_BATTERY_SERVICE, BLE_UUID_TYPE_BLE},
+//    {BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}
+//};
 
 //static ble_uuid_t m_adv_uuids[]          =                                     
 //{
