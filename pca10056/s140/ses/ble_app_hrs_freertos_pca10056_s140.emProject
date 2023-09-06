@@ -110,7 +110,9 @@
         <configuration Name="Release" build_exclude_from_build="Yes" />
       </file>
       <file file_name="../config/sdk_config.h" />
-      <file file_name="main.cpp" />
+      <file file_name="main.cpp">
+        <configuration Name="Release" build_exclude_from_build="No" />
+      </file>
     </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="../../../../../../external/segger_rtt/SEGGER_RTT.c" />

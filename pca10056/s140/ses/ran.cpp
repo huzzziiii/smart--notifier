@@ -363,6 +363,15 @@ void services_init(void)
     ret_code_t                        err_code;
     CustInitChar                     cus_init;
 
+
+    nrf_ble_qwr_init_t qwrInit = {0};
+
+    // init nRF Queued Write Module
+    qwrInit.error_handler = nrf_qwr_error_handler;
+
+    err_code = nrf_ble_qwr_init(&m_qwr, &qwrInit);
+    APP_ERROR_CHECK(err_code);
+
      // Initialize CUS Service init structure to zero.
     memset(&cus_init, 0, sizeof(cus_init));
     
