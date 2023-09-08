@@ -13,6 +13,8 @@
 #include "nrf_ble_gatt.h"
 #include "nrf_ble_qwr.h"
 
+#include "notifier_service.h"	  // TODO HUZZI : move
+
 #define DEVICE_NAME                         "NRx-HUZ"                            /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME                   "NordicSemiconductor"                   /**< Manufacturer. Will be passed to Device Information Service. */
 
@@ -62,12 +64,12 @@ BLE_ADVERTISING_DEF(m_advertising);                                 /**< Adverti
 
 
 
- void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context);
-  void ble_stack_init(void);
-   void bsp_event_handler(bsp_event_t event);
-   void advertising_start(void * p_erase_bonds);
-    void conn_params_init(void);
-      void gap_params_init(void);
-       void gatt_init(void);
-       void advertising_init(void);
-        void services_init(void);
+void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context);
+void ble_stack_init(void);
+void bsp_event_handler(bsp_event_t event);
+void advertising_start(void * p_erase_bonds);
+void conn_params_init(void);
+void gap_params_init(void);
+void gatt_init(void);
+void advertising_init(void);
+void services_init(FnPtr<void, StatusInfo*, CustomEvent*> fnPtr);

@@ -13,7 +13,7 @@
 
 BLE_CUS_DEF(m_cus);
 
-static uint16_t m_conn_handle         = BLE_CONN_HANDLE_INVALID;    /**< Handle of the current connection. */
+static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;    /**< Handle of the current connection. */
 
 
 /**@brief Function for handling advertising events.
@@ -357,7 +357,9 @@ static void nrf_qwr_error_handler(uint32_t nrf_error)
 //    APP_ERROR_CHECK(err_code);
 //}
 
-void services_init(void)
+//void services_init(FnPtr<void, StatusInfo*, CustomEvent> fnPtr)
+
+void services_init(FnPtr<void, StatusInfo*, CustomEvent*> dataHandler)
 {
     /* YOUR_JOB: Add code to initialize the services used by the application.*/
     ret_code_t                        err_code;
@@ -376,7 +378,7 @@ void services_init(void)
     memset(&cus_init, 0, sizeof(cus_init));
     
     NotifierService notifierService;
-    err_code = notifierService.Init(&m_cus, &cus_init);
+    err_code = notifierService.Init(&m_cus, &cus_init, dataHandler);
     APP_ERROR_CHECK(err_code);	
 }
 

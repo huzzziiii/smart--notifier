@@ -47,6 +47,8 @@
 
 #include "ran.h"
 
+#include "notifier_service.h"	  // TODO huzzi: remove
+
 
 
 #define BATTERY_LEVEL_MEAS_INTERVAL         2000                                    /**< Battery level measurement interval (ms). */
@@ -519,6 +521,32 @@ static void clock_init(void)
 }
 
 
+/**@brief Function for handling the Custom Service Service events.
+ *
+ * @details This function will be called for all Custom Service events which are passed to
+ *          the application.
+ *
+ * @param[in]   p_cus_service  Custom Service structure.
+ * @param[in]   p_evt          Event received from the Custom Service.
+ *
+ */
+static void on_cus_evt(StatusInfo        * p_cus_service,	    // TODO HUZZI modify name / and move
+				CustomEvent * p_evt)
+{
+    switch(p_evt->eventType)
+    {
+        case BLE_CUS_EVT_CONNECTED:
+            break;
+
+        case BLE_CUS_EVT_DISCONNECTED:
+              break;
+
+        default:
+              // No implementation needed.
+              break;
+    }
+}
+
 /**@brief Function for application main entry.
  */
 int main(void)
@@ -551,7 +579,7 @@ int main(void)
     buttons_leds_init(&erase_bonds);
     gap_params_init();
     gatt_init();
-    services_init();
+    services_init(on_cus_evt);
     advertising_init();
     sensor_simulator_init();
     conn_params_init();
