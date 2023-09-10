@@ -528,7 +528,7 @@ MCP9808 tempSensor;
 int main(void)
 {
     tempSensor.Start();
-    while(1);
+    //while(1);
 
     /*
     bool erase_bonds;
@@ -563,10 +563,12 @@ int main(void)
 
     NRF_LOG_INFO("HRS FreeRTOS example started.");
 
+       */
+
     // Start FreeRTOS scheduler.
     vTaskStartScheduler();
 
-    */
+ 
 
     //for (;;)
     //{
