@@ -16,6 +16,32 @@ BLE_CUS_DEF(m_cus);
 static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;    /**< Handle of the current connection. */
 
 
+/**@brief Function for handling the Custom Service Service events.
+ *
+ * @details This function will be called for all Custom Service events which are passed to
+ *          the application.
+ *
+ * @param[in]   p_cus_service  Custom Service structure.
+ * @param[in]   p_evt          Event received from the Custom Service.
+ *
+ */
+static void on_cus_evt(StatusInfo        * p_cus_service,	    // TODO HUZZI modify name / and move
+				CustomEvent * p_evt)
+{
+    switch(p_evt->eventType)
+    {
+        case BLE_CUS_EVT_CONNECTED:
+            break;
+
+        case BLE_CUS_EVT_DISCONNECTED:
+              break;
+
+        default:
+              // No implementation needed.
+              break;
+    }
+}
+
 /**@brief Function for handling advertising events.
  *
  * @details This function will be called for advertising events which are passed to the application.
@@ -410,4 +436,16 @@ void advertising_init(void)
     APP_ERROR_CHECK(err_code);
 
     ble_advertising_conn_cfg_tag_set(&m_advertising, APP_BLE_CONN_CFG_TAG);
+}
+
+void ble_init()
+{
+    ble_stack_init();
+    gap_params_init();
+    gatt_init();
+    services_init(on_cus_evt);
+    advertising_init();
+    //sensor_simulator_init();
+    conn_params_init();
+    //peer_manager_init();
 }

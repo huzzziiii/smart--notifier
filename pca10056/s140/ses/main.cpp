@@ -45,9 +45,9 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
-#include "ran.h"
+#include "ran.h"	        // TODO HUZZI
+#include "mcp9808.h"
 
-#include "notifier_service.h"	  // TODO huzzi: remove
 
 
 
@@ -520,37 +520,17 @@ static void clock_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
+MCP9808 tempSensor;
 
-/**@brief Function for handling the Custom Service Service events.
- *
- * @details This function will be called for all Custom Service events which are passed to
- *          the application.
- *
- * @param[in]   p_cus_service  Custom Service structure.
- * @param[in]   p_evt          Event received from the Custom Service.
- *
- */
-static void on_cus_evt(StatusInfo        * p_cus_service,	    // TODO HUZZI modify name / and move
-				CustomEvent * p_evt)
-{
-    switch(p_evt->eventType)
-    {
-        case BLE_CUS_EVT_CONNECTED:
-            break;
-
-        case BLE_CUS_EVT_DISCONNECTED:
-              break;
-
-        default:
-              // No implementation needed.
-              break;
-    }
-}
 
 /**@brief Function for application main entry.
  */
 int main(void)
 {
+    tempSensor.Start();
+    while(1);
+
+    /*
     bool erase_bonds;
 
     // Initialize modules.
@@ -571,31 +551,25 @@ int main(void)
     // Activate deep sleep mode.
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
-    // Configure and initialize the BLE stack.
-    ble_stack_init();
-
     // Initialize modules.
     timers_init();
     buttons_leds_init(&erase_bonds);
-    gap_params_init();
-    gatt_init();
-    services_init(on_cus_evt);
-    advertising_init();
-    sensor_simulator_init();
-    conn_params_init();
-    peer_manager_init();
-    //application_timers_start();
+
+    ble_init();
 
     // Create a FreeRTOS task for the BLE stack.
     // The task will run advertising_start() before entering its loop.
     nrf_sdh_freertos_init(advertising_start, &erase_bonds);
 
     NRF_LOG_INFO("HRS FreeRTOS example started.");
+
     // Start FreeRTOS scheduler.
     vTaskStartScheduler();
 
-    for (;;)
-    {
-        APP_ERROR_HANDLER(NRF_ERROR_FORBIDDEN);
-    }
+    */
+
+    //for (;;)
+    //{
+    //    APP_ERROR_HANDLER(NRF_ERROR_FORBIDDEN);
+    //}
 }

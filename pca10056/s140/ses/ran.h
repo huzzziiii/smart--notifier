@@ -73,3 +73,5 @@ void gap_params_init(void);
 void gatt_init(void);
 void advertising_init(void);
 void services_init(FnPtr<void, StatusInfo*, CustomEvent*> fnPtr);
+
+void ble_init();

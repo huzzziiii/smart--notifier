@@ -178,7 +178,6 @@ static void on_write(StatusInfo * p_cus, ble_evt_t const * p_ble_evt)
 	  m++;
     }
 
-   
 }
 
 
