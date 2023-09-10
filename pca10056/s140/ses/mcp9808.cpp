@@ -84,9 +84,35 @@ void MCP9808::Start()
 
     Write(Register::AMBIENT, 1);
 
+    Run(); // TODO remove
+
+    while(1);
     //nrf_delay_ms(500);
 
-    Read();
+    //Read();
+
+        // TODO: create a task      --  think about stack size!
+    if (xTaskCreate(MCP9808::Process, "Process", 100, this, 0, &mTaskHandle) != pdPASS)	
+    {
+        APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
+    } 
+}
+
+void MCP9808::Process(void* instance)
+{
+    //NRF_LOG_INFO("MCP9808 task started!");
+    auto* app = static_cast<MCP9808*>(instance);
+    app->Run();
+}
+
+void MCP9808::Run()
+{
+    while(true)
+    {
+        Read();
+        
+        nrf_delay_ms(2000);
+    }
 }
 
 
@@ -105,6 +131,7 @@ void MCP9808::Read()
     ret_code_t errorCode = nrf_drv_twi_rx(&m_twi, MCP9808_ADDR, rawData, 2);
     APP_ERROR_CHECK(errorCode);
     while(!m_rx_done);	  // TODO HUZZI change to sync
-
+    
+    m_rx_done = false;
     //m_xfer_done = false;
 }

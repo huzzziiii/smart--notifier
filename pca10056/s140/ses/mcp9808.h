@@ -38,11 +38,14 @@ class MCP9808 : public Publisher
 
     private:
     void Config();
-    void static Process(void* instance);
 
     void Write(uint8_t reg, uint8_t size);
     void Read();
+
+    static void Process(void* instance);
     void Run();
+
+    
 
 
     uint8_t mRawTemp[3] = {0};
