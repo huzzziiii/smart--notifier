@@ -528,6 +528,8 @@ MCP9808 tempSensor;
 int main(void)
 {
     tempSensor.Start();
+
+    ble_init();
     //while(1);
 
     /*

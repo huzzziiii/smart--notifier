@@ -35,7 +35,6 @@ void twiHandler(nrf_drv_twi_evt_t const * p_event, void * p_context)
 	  }
 	  else if (p_event->xfer_desc.type == NRF_DRV_TWI_XFER_RX)
 	  {
-	      //m_rx_done = true;     // TODO HUZZI: use sync method
 	      vTaskNotifyGiveFromISR(mcp9808->mTaskHandle, &xHigherPriorityTaskWoken);
 
 	  }

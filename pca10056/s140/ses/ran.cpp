@@ -8,6 +8,8 @@
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
+#include "nrf_sdh_ble.h"
+#include "nrf_sdh_freertos.h"
 
 #include "notifier_service.h"
 
@@ -448,4 +450,8 @@ void ble_init()
     //sensor_simulator_init();
     conn_params_init();
     //peer_manager_init();
+
+    // Create a FreeRTOS task for the BLE stack.
+    // The task will run advertising_start() before entering its loop.
+    nrf_sdh_freertos_init(advertising_start, NULL);
 }
