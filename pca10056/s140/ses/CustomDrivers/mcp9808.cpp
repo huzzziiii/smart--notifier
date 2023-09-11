@@ -10,10 +10,9 @@
 
 static const nrf_drv_twi_t m_twi = NRF_DRV_TWI_INSTANCE(TWI_INSTANCE_ID);
 static bool volatile m_xfer_done = false;        // TODO HUZZI: rmv
-static bool volatile m_rx_done = false;        // TODO HUZZI: rmv
 
 
-MCP9808::MCP9808()
+MCP9808::MCP9808() : Publisher(Publisher::Category::TEMPERATURE)
 {
     // TODO HUZZI
 }
@@ -21,7 +20,7 @@ MCP9808::MCP9808()
  /**
  * @brief TWI events handler. Called within the TWI interrupt handler
  */
-void TwiHandler(nrf_drv_twi_evt_t const * p_event, void * p_context)	   
+void twiHandler(nrf_drv_twi_evt_t const * p_event, void * p_context)	   
 {
     MCP9808* mcp9808 = static_cast<MCP9808*>(p_context);
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -31,19 +30,38 @@ void TwiHandler(nrf_drv_twi_evt_t const * p_event, void * p_context)
         case NRF_DRV_TWI_EVT_DONE:
 	  if (p_event->xfer_desc.type == NRF_DRV_TWI_XFER_TX)
 	  {
-	      // m_xfer_done = true;	// TODO HUZZI: use sync method
-	      vTaskNotifyGiveFromISR(mcp9808->mTaskHandle, &xHigherPriorityTaskWoken);
+	      m_xfer_done = true;	// TODO HUZZI: use sync method
 	  }
 	  else if (p_event->xfer_desc.type == NRF_DRV_TWI_XFER_RX)
 	  {
+	      //m_rx_done = true;     // TODO HUZZI: use sync method
 	      vTaskNotifyGiveFromISR(mcp9808->mTaskHandle, &xHigherPriorityTaskWoken);
-	  }
 
+	  }
 	  break;
 
         default:
 	  break;
     }
+}
+
+uint16_t MCP9808::ToCelcius()
+{
+    uint16_t tempInCelcius = 0;
+    uint8_t upperByte = mRawTemp[0] & 0x1F;
+    uint8_t lowerByte = mRawTemp[1];
+    uint8_t isSigned = upperByte & 0x10;
+
+    if (isSigned)
+    {
+        upperByte &= 0x0F;
+        tempInCelcius = 256 - (upperByte << 4 | lowerByte >> 4);
+    }
+    else
+    {
+        tempInCelcius = upperByte << 4 | lowerByte >> 4;
+    }
+    return tempInCelcius;
 }
 
 void MCP9808::Start()
@@ -57,21 +75,18 @@ void MCP9808::Start()
        .clear_bus_init     = false
     };
     
-    ret_code_t errCode = nrf_drv_twi_init(&m_twi, &mI2cConfig, TwiHandler, this);
-    if (errCode != 0)
-    {
-        return;
-    }
-    //APP_ERROR_CHECK(err_code);
+    ret_code_t err_code = nrf_drv_twi_init(&m_twi, &mI2cConfig, twiHandler, this);
+    APP_ERROR_CHECK(err_code);
 
     nrf_drv_twi_enable(&m_twi);	
 
-    
+    Write(Register::AMBIENT, 1);
+    return; // TODO
 
     // TODO: create a task      --  think about stack size!
     if (xTaskCreate(MCP9808::Process, "Process", 100, this, 0, &mTaskHandle) != pdPASS)	
     {
-       // APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);  // TODO: add check
+        APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
     } 
 }
 
@@ -84,14 +99,14 @@ void MCP9808::Process(void* instance)
 
 void MCP9808::Run()
 {
-    Write(Register::AMBIENT, 1);
-    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-
     while(true)
     {
         Read();
         
         uint32_t taskNotify = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        //uint16_t celc = ToCelcius();
+
+        Notify();
         vTaskDelay(pdMS_TO_TICKS(DELAY_MS_PER_READ));
     }
 }
@@ -100,18 +115,12 @@ void MCP9808::Run()
 void MCP9808::Write(uint8_t reg, uint8_t size)
 {
     ret_code_t errorCode = nrf_drv_twi_tx(&m_twi, MCP9808_ADDR, &reg, size, false);
-    if (errorCode != 0)
-    {
-        return;
-    }
-   // APP_ERROR_CHECK(errorCode);
-    //while(!m_xfer_done);	  // TODO HUZZI change to sync
+    APP_ERROR_CHECK(errorCode);
+    while(!m_xfer_done);	  // TODO HUZZI change to sync
 }
 
 void MCP9808::Read()
 {
-    uint8_t rawData[2] = {0};
-    ret_code_t errorCode = nrf_drv_twi_rx(&m_twi, MCP9808_ADDR, rawData, 2);
-    // TODO: add check
-    //APP_ERROR_CHECK(errorCode);
+    ret_code_t errorCode = nrf_drv_twi_rx(&m_twi, MCP9808_ADDR, mRawTemp, 2);
+    APP_ERROR_CHECK(errorCode);
 }

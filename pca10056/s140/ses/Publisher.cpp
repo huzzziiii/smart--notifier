@@ -1,5 +1,8 @@
 #include "Publisher.h"
 
+Publisher::Publisher(Publisher::Category category) : mCategory(category)
+{
+}
 
 bool Publisher::Subscribe(Subscriber* subscriber)
 {
@@ -14,6 +17,7 @@ bool Publisher::Subscribe(Subscriber* subscriber)
         if (mSubscribers[idx] == nullptr)
         {
 	  mSubscribers[mSubscriberCount++] = subscriber;
+	  subscriber->Subscribe(this);    // allow subscriber to track its publisher as well for lifetime management purposes
 	  return true;
         }
     }
@@ -51,4 +55,9 @@ void Publisher::Notify()
        }
    }
    return false;
+}
+
+Publisher::Category Publisher::GetCategory()
+{
+    return mCategory;
 }

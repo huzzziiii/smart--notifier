@@ -1,10 +1,16 @@
 
 
 
+
 #include "ran.h"	        // TODO HUZZI
 #include "mcp9808.h"
+<<<<<<< HEAD
 #include "SystemTask.h"
 #include "UartApp.h"
+=======
+#include "uart.h"
+#include "NotificationManager.h"
+>>>>>>> 16dca8d (...)
 
 #include <stdint.h>
 #include <string.h>
@@ -32,6 +38,7 @@ UartCommParams commParams =
 };
 
 MCP9808 tempSensor;
+<<<<<<< HEAD
 
 // UART instance
 UART uart{*NRF_UART0, commParams, UARTApp::UARTCallback};
@@ -39,14 +46,52 @@ UART uart{*NRF_UART0, commParams, UARTApp::UARTCallback};
 // System task
 SystemTask systemTask{tempSensor, uart};
 
+=======
+UART uart;
+NotificationManager notificationManager{uart, &tempSensor};
+>>>>>>> 16dca8d (...)
 
 /**@brief Function for application main entry.
  */
 int main(void)
 {
+<<<<<<< HEAD
     //log_init();
 
     systemTask.Start();
+=======
+    tempSensor.Start();
+
+       // Initialize modules.
+    log_init();
+    clock_init();
+
+    ble_init();
+    while(1);
+
+    /*
+    bool erase_bonds;
+
+ 
+
+    // Do not start any interrupt that uses system functions before system initialisation.
+    // The best solution is to start the OS before any other initalisation.
+
+#if NRF_LOG_ENABLED
+    // Start execution.
+    if (pdPASS != xTaskCreate(logger_thread, "LOGGER", 256, NULL, 1, &m_logger_thread))
+    {
+        APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
+    }
+#endif
+
+    // Activate deep sleep mode.
+    SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+    // Initialize modules.
+    timers_init();
+    buttons_leds_init(&erase_bonds);
+>>>>>>> 16dca8d (...)
 
     ble_init();
 

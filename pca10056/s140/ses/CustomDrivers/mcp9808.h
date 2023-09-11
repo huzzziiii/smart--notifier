@@ -22,7 +22,8 @@ class MCP9808 : public Publisher
     MCP9808(); //= default;
 
     void Start();
-    uint16_t ReadTempInC();	
+    
+    uint16_t ToCelcius();
     
 
     // MCP9808 Registers
@@ -44,11 +45,10 @@ class MCP9808 : public Publisher
 
     static void Process(void* instance);
     void Run();
-
     
 
 
-    uint8_t mRawTemp[3] = {0};
+    uint8_t mRawTemp[2] = {0};
     nrf_drv_twi_config_t mI2cConfig;	
 
     // constants
