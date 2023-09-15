@@ -423,8 +423,8 @@ void advertising_init(void)
     //init.advdata.name_type          = BLE_ADVDATA_SHORT_NAME;
     //init.advdata.short_name_len     = 5;
 
-    init.advdata.include_appearance      = true;
-    init.advdata.flags                   = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
+    init.advdata.include_appearance	    = true;
+    init.advdata.flags			      = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
     init.advdata.uuids_complete.uuid_cnt = sizeof(m_adv_uuids_cust) / sizeof(m_adv_uuids_cust[0]);
     init.advdata.uuids_complete.p_uuids  = m_adv_uuids_cust;
 
