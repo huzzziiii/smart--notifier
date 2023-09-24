@@ -47,7 +47,7 @@
 
 #include "ran.h"	        // TODO HUZZI
 #include "mcp9808.h"
-
+#include "SystemTask.h"
 
 
 
@@ -520,7 +520,32 @@ static void clock_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
+// ======== APP START ========
+
+void UARTHandler(Fifo<DataUnit> fifo)
+{
+    int m = 0;
+    m++;
+}
+
+UartCommParams commParams = 
+{
+    .rxPinNo = RX_PIN_NUMBER,
+    .txPinNo = TX_PIN_NUMBER,
+    .rtsPinNo = RTS_PIN_NUMBER,
+    .ctsPinNo = CTS_PIN_NUMBER,
+    .hwFlowCntl = UartHwFcDisabled,
+    .useParity = false,
+    .baudRate = NRF_UART_BAUDRATE_115200,
+    .irqPriority = APP_IRQ_PRIORITY_LOWEST
+};
+
+// Uart instance
+UART uart{*NRF_UART0, commParams, UARTHandler}; //, UartApp::UartHandler};
+
 MCP9808 tempSensor;
+
+SystemTask systemTask{uart};
 
 
 /**@brief Function for application main entry.
