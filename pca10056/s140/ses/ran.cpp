@@ -5,9 +5,9 @@
 #include "ble_conn_params.h"
 
 #include "nrf_sdh.h"
-#include "nrf_log.h"
-#include "nrf_log_ctrl.h"
-#include "nrf_log_default_backends.h"
+//#include "nrf_log.h"
+//#include "nrf_log_ctrl.h"
+//#include "nrf_log_default_backends.h"
 #include "nrf_sdh_ble.h"
 #include "nrf_sdh_freertos.h"
 
@@ -57,9 +57,9 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
     switch (ble_adv_evt)
     {
         case BLE_ADV_EVT_FAST:
-            NRF_LOG_INFO("Fast advertising.");
+         //   NRF_LOG_INFO("Fast advertising.");
             err_code = bsp_indication_set(BSP_INDICATE_ADVERTISING);
-            APP_ERROR_CHECK(err_code);
+            //APP_ERROR_CHECK(err_code);
             break;
 
         case BLE_ADV_EVT_IDLE:
@@ -84,45 +84,45 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
     switch (p_ble_evt->header.evt_id)
     {
         case BLE_GAP_EVT_CONNECTED:
-            NRF_LOG_INFO("Connected");
+         //   NRF_LOG_INFO("Connected");
             err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
-            APP_ERROR_CHECK(err_code);
+            //APP_ERROR_CHECK(err_code);
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
             err_code = nrf_ble_qwr_conn_handle_assign(&m_qwr, m_conn_handle);
-            APP_ERROR_CHECK(err_code);
+            //APP_ERROR_CHECK(err_code);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
-            NRF_LOG_INFO("Disconnected");
+            //NRF_LOG_INFO("Disconnected");
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
             break;
 
         case BLE_GAP_EVT_PHY_UPDATE_REQUEST:
         {
-            NRF_LOG_DEBUG("PHY update request.");
+            //NRF_LOG_DEBUG("PHY update request.");
             ble_gap_phys_t const phys =
             {
                 .tx_phys = BLE_GAP_PHY_AUTO,
                 .rx_phys = BLE_GAP_PHY_AUTO,
             };
             err_code = sd_ble_gap_phy_update(p_ble_evt->evt.gap_evt.conn_handle, &phys);
-            APP_ERROR_CHECK(err_code);
+            //APP_ERROR_CHECK(err_code);
         } break;
 
         case BLE_GATTC_EVT_TIMEOUT:
             // Disconnect on GATT Client timeout event.
-            NRF_LOG_DEBUG("GATT Client Timeout.");
+            //NRF_LOG_DEBUG("GATT Client Timeout.");
             err_code = sd_ble_gap_disconnect(p_ble_evt->evt.gattc_evt.conn_handle,
                                              BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
-            APP_ERROR_CHECK(err_code);
+            //APP_ERROR_CHECK(err_code);
             break;
 
         case BLE_GATTS_EVT_TIMEOUT:
             // Disconnect on GATT Server timeout event.
-            NRF_LOG_DEBUG("GATT Server Timeout.");
+            //NRF_LOG_DEBUG("GATT Server Timeout.");
             err_code = sd_ble_gap_disconnect(p_ble_evt->evt.gatts_evt.conn_handle,
                                              BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
-            APP_ERROR_CHECK(err_code);
+            //APP_ERROR_CHECK(err_code);
             break;
 
         default:
@@ -141,17 +141,17 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
     ret_code_t err_code;
 
     err_code = nrf_sdh_enable_request();
-    APP_ERROR_CHECK(err_code);
+    //APP_ERROR_CHECK(err_code);
 
     // Configure the BLE stack using the default settings.
     // Fetch the start address of the application RAM.
     uint32_t ram_start = 0;
     err_code = nrf_sdh_ble_default_cfg_set(APP_BLE_CONN_CFG_TAG, &ram_start);
-    APP_ERROR_CHECK(err_code);
+    //APP_ERROR_CHECK(err_code);
 
     // Enable BLE stack.
     err_code = nrf_sdh_ble_enable(&ram_start);
-    APP_ERROR_CHECK(err_code);
+    //APP_ERROR_CHECK(err_code);
 
     // Register a handler for BLE events.
     NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
@@ -177,7 +177,7 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
                                              BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
             if (err_code != NRF_ERROR_INVALID_STATE)
             {
-                APP_ERROR_CHECK(err_code);
+                //APP_ERROR_CHECK(err_code);
             }
             break;
 
@@ -187,7 +187,7 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
                 err_code = ble_advertising_restart_without_whitelist(&m_advertising);
                 if (err_code != NRF_ERROR_INVALID_STATE)
                 {
-                    APP_ERROR_CHECK(err_code);
+                    //APP_ERROR_CHECK(err_code);
                 }
             }
             break;
@@ -210,7 +210,7 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
     else
     {
         ret_code_t err_code = ble_advertising_start(&m_advertising, BLE_ADV_MODE_FAST);
-        APP_ERROR_CHECK(err_code);
+        //APP_ERROR_CHECK(err_code);
     }
 }
 
@@ -232,7 +232,7 @@ static void on_conn_params_evt(ble_conn_params_evt_t * p_evt)
     if (p_evt->evt_type == BLE_CONN_PARAMS_EVT_FAILED)
     {
         err_code = sd_ble_gap_disconnect(m_conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE);
-        APP_ERROR_CHECK(err_code);
+        //APP_ERROR_CHECK(err_code);
     }
 }
 
@@ -243,7 +243,7 @@ static void on_conn_params_evt(ble_conn_params_evt_t * p_evt)
  */
 static void conn_params_error_handler(uint32_t nrf_error)
 {
-    APP_ERROR_HANDLER(nrf_error);
+    //APP_ERROR_HANDLER(nrf_error);
 }
 
 
@@ -265,7 +265,7 @@ static void conn_params_error_handler(uint32_t nrf_error)
     cp_init.error_handler                  = conn_params_error_handler;
 
     err_code = ble_conn_params_init(&cp_init);
-    APP_ERROR_CHECK(err_code);
+    //APP_ERROR_CHECK(err_code);
 }
 
 
@@ -283,12 +283,12 @@ static void conn_params_error_handler(uint32_t nrf_error)
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&sec_mode);
 
     err_code = sd_ble_gap_device_name_set(&sec_mode,
-                                          (const uint8_t *)DEVICE_NAME,
-                                          strlen(DEVICE_NAME));
-    APP_ERROR_CHECK(err_code);
+							    (const uint8_t *)DEVICE_NAME,
+							    strlen(DEVICE_NAME));
+    //APP_ERROR_CHECK(err_code);
 
     err_code = sd_ble_gap_appearance_set(BLE_APPEARANCE_HEART_RATE_SENSOR_HEART_RATE_BELT);
-    APP_ERROR_CHECK(err_code);
+    //APP_ERROR_CHECK(err_code);
 
     memset(&gap_conn_params, 0, sizeof(gap_conn_params));
 
@@ -298,7 +298,7 @@ static void conn_params_error_handler(uint32_t nrf_error)
     gap_conn_params.conn_sup_timeout  = CONN_SUP_TIMEOUT;
 
     err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
-    APP_ERROR_CHECK(err_code);
+    //APP_ERROR_CHECK(err_code);
 }
 
 
@@ -306,7 +306,7 @@ static void conn_params_error_handler(uint32_t nrf_error)
  void gatt_init(void)
 {
     ret_code_t err_code = nrf_ble_gatt_init(&m_gatt, NULL);
-    APP_ERROR_CHECK(err_code);
+    //APP_ERROR_CHECK(err_code);
 }
 
 
@@ -319,73 +319,9 @@ static void conn_params_error_handler(uint32_t nrf_error)
  */
 static void nrf_qwr_error_handler(uint32_t nrf_error)
 {
-    APP_ERROR_HANDLER(nrf_error);
+    //APP_ERROR_HANDLER(nrf_error);
 }
 
-
-/**@brief Function for initializing services that will be used by the application.
- *
- * @details Initialize the Heart Rate, Battery and Device Information services.
- */
-// void services_init(void)
-//{
-//    ret_code_t         err_code;
-//    ble_hrs_init_t     hrs_init;
-//    ble_bas_init_t     bas_init;
-//    ble_dis_init_t     dis_init;
-//    nrf_ble_qwr_init_t qwr_init = {0};
-//    uint8_t            body_sensor_location;
-
-//    // Initialize Queued Write Module.
-//    qwr_init.error_handler = nrf_qwr_error_handler;
-
-//    err_code = nrf_ble_qwr_init(&m_qwr, &qwr_init);
-//    APP_ERROR_CHECK(err_code);
-
-//    // Initialize Heart Rate Service.
-//    body_sensor_location = BLE_HRS_BODY_SENSOR_LOCATION_FINGER;
-
-//    memset(&hrs_init, 0, sizeof(hrs_init));
-
-//    hrs_init.evt_handler                 = NULL;
-//    hrs_init.is_sensor_contact_supported = true;
-//    hrs_init.p_body_sensor_location      = &body_sensor_location;
-
-//    // Here the sec level for the Heart Rate Service can be changed/increased.
-//    hrs_init.hrm_cccd_wr_sec = SEC_OPEN;
-//    hrs_init.bsl_rd_sec      = SEC_OPEN;
-
-//    err_code = ble_hrs_init(&m_hrs, &hrs_init);
-//    APP_ERROR_CHECK(err_code);
-
-//    // Initialize Battery Service.
-//    memset(&bas_init, 0, sizeof(bas_init));
-
-//    // Here the sec level for the Battery Service can be changed/increased.
-//    bas_init.bl_rd_sec        = SEC_OPEN;
-//    bas_init.bl_cccd_wr_sec   = SEC_OPEN;
-//    bas_init.bl_report_rd_sec = SEC_OPEN;
-
-//    bas_init.evt_handler          = NULL;
-//    bas_init.support_notification = true;
-//    bas_init.p_report_ref         = NULL;
-//    bas_init.initial_batt_level   = 100;
-
-//    err_code = ble_bas_init(&m_bas, &bas_init);
-//    APP_ERROR_CHECK(err_code);
-
-//    // Initialize Device Information Service.
-//    memset(&dis_init, 0, sizeof(dis_init));
-
-//    ble_srv_ascii_to_utf8(&dis_init.manufact_name_str, (char *)MANUFACTURER_NAME);
-
-//    dis_init.dis_char_rd_sec = SEC_OPEN;
-
-//    err_code = ble_dis_init(&dis_init);
-//    APP_ERROR_CHECK(err_code);
-//}
-
-//void services_init(FnPtr<void, StatusInfo*, CustomEvent> fnPtr)
 
 void services_init(FnPtr<void, StatusInfo*, CustomEvent*> dataHandler)
 {
@@ -393,21 +329,23 @@ void services_init(FnPtr<void, StatusInfo*, CustomEvent*> dataHandler)
     ret_code_t                        err_code;
     CustInitChar                     cus_init;
 
-
     nrf_ble_qwr_init_t qwrInit = {0};
 
     // init nRF Queued Write Module
     qwrInit.error_handler = nrf_qwr_error_handler;
 
     err_code = nrf_ble_qwr_init(&m_qwr, &qwrInit);
-    APP_ERROR_CHECK(err_code);
+    //APP_ERROR_CHECK(err_code);
 
      // Initialize CUS Service init structure to zero.
     memset(&cus_init, 0, sizeof(cus_init));
     
     NotifierService notifierService;
     err_code = notifierService.Init(&m_cus, &cus_init, dataHandler);
-    APP_ERROR_CHECK(err_code);	
+
+    int m =0;
+    m++;
+    //APP_ERROR_CHECK(err_code);	
 }
 
 
@@ -435,7 +373,7 @@ void advertising_init(void)
     init.evt_handler = on_adv_evt;
 
     err_code = ble_advertising_init(&m_advertising, &init);
-    APP_ERROR_CHECK(err_code);
+    //APP_ERROR_CHECK(err_code);
 
     ble_advertising_conn_cfg_tag_set(&m_advertising, APP_BLE_CONN_CFG_TAG);
 }

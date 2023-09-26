@@ -171,7 +171,8 @@ class UART
     void EnableInterrupt(uint32_t mask);
     void ConfigureInterrupts();
     bool GetIRQStatus(uint32_t  mask) const;
-    bool GetRegValue(nrf_uart_event_t uartRegOffset) const;
+    uint32_t GetRegValue(uint32_t reg) const;
+    //bool GetRegValue(nrf_uart_event_t uartRegOffset) const;
     uint32_t ReadRXD() const;
 
     void TXByte(DataUnit data);

@@ -186,7 +186,7 @@
       <file file_name="Fifo.cpp">
         <configuration Name="Release" build_exclude_from_build="Yes" />
       </file>
-      <file file_name="Fifo.h" />
+      <file file_name="Fifo/Fifo.h" />
     </folder>
     <folder Name="SystemTask">
       <file file_name="SystemTask/SystemTask.cpp" />
