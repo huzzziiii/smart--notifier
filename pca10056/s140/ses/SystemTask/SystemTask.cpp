@@ -14,7 +14,7 @@ SystemTask::SystemTask(MCP9808& mcp9808, UART& uart) :
 void SystemTask::Start()
 {
     // TODO: think about stack size!
-    if (xTaskCreate(SystemTask::Process, "Run", 100, this, 0, &taskHandle) != pdPASS)   
+    if (xTaskCreate(SystemTask::Process, "Run", 100, this, 0, &mTaskHandle) != pdPASS)   
     {
         int m = 0;
         m++;
@@ -42,6 +42,46 @@ void SystemTask::Run()
         if (xQueueReceive(mTaskQueue, &rcvdMsg, portMAX_DELAY) == pdPASS)      // wait for the user input over UART (for now!)
         {
 	  curMsg = static_cast<Message>(rcvdMsg);	
+	  const char* msgStr = msgLookup[static_cast<uint8_t>(rcvdMsg)].msgStr;
+            // mUart.PrintUart("Received System message: %s", msgStr);
+
+	  switch (curMsg)
+	  {
+	      case Message::SUBSCRIBE_TEMP_NOTIFICATIONS:
+	      {
+		break;
+	      }
+
+	      case Message::UNSUBSCRIBE_TEMP_NOTIFICATIONS:
+	      {
+		break;
+	      }
+
+	      default:
+		break;
+	  }
         }
     }
 }
+
+void SystemTask::PushMessage(SystemTask::Message message)
+{
+    BaseType_t xHigherPriorityTaskWoken;
+    xHigherPriorityTaskWoken = pdFALSE;
+    xQueueSendFromISR(mTaskQueue, &message, &xHigherPriorityTaskWoken);
+}
+
+SystemTask::Message SystemTask::GetMessage(const char* str) 
+{
+    if (!strcmp("tempOn", str))
+    {
+        return Message::SUBSCRIBE_TEMP_NOTIFICATIONS;
+    }
+
+    if (!strcmp("tempOff", str))
+    {
+        return Message::UNSUBSCRIBE_TEMP_NOTIFICATIONS;
+    }
+    return Message::INVALID;
+}
+

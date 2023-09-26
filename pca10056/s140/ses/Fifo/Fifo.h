@@ -14,22 +14,22 @@ class Fifo
         mCount++;
     }
 
-   // T Read() const
-   // {
-   //     if (!IsEmpty())
-   //     {
-	  //T data = mBuffer[mReadIdx++];
-	  //mReadIdx %= SIZE;
-	  //mCount--;
-	  //return data;    
-   //     }
-   //     return 0;	// TODO: look for alternate ways. would have returned an optional
-   // }
+    T Read()
+    {
+        if (!IsEmpty())
+        {
+	  T data = mBuffer[mReadIdx++];
+	  mReadIdx %= SIZE;
+	  mCount--;
+	  return data;    
+        }
+        return 0;	// TODO: look for alternate ways. would have returned an optional
+    }
 
-   // bool IsEmpty() const
-   // {
-   //     return mCount == 0;
-   // }
+    bool IsEmpty() const
+    {
+        return mCount == 0;
+    }
 
     private:
 

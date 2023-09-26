@@ -1,9 +1,5 @@
 #include "uart.h"
 
-//UART(NRF_UART_Type& uartInstance, const UartCommParams& uartCommParams, Callback handle)
-//{
-
-//}
 
 static UART* pInstance;
 
@@ -88,7 +84,6 @@ void UART::IRQHandler()
         }
     }
 }
-
     
 void UART::EnableUART()
 {

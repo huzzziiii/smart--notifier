@@ -4,6 +4,7 @@
 #include "ran.h"	        // TODO HUZZI
 #include "mcp9808.h"
 #include "SystemTask.h"
+#include "UartApp.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -16,13 +17,6 @@ static void log_init(void)
     //APP_ERROR_CHECK(err_code);
 
     //NRF_LOG_DEFAULT_BACKENDS_INIT();
-}
-
-
-void UARTHandler(Fifo<DataUnit> fifo)
-{
-    int m = 0;
-    m++;
 }
 
 UartCommParams commParams = 
@@ -40,7 +34,7 @@ UartCommParams commParams =
 MCP9808 tempSensor;
 
 // UART instance
-UART uart{*NRF_UART0, commParams, UARTHandler}; //, UartApp::UartHandler};
+UART uart{*NRF_UART0, commParams, UARTApp::UARTCallback};
 
 // System task
 SystemTask systemTask{tempSensor, uart};

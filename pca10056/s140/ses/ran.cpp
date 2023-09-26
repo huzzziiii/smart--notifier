@@ -325,7 +325,6 @@ static void nrf_qwr_error_handler(uint32_t nrf_error)
 
 void services_init(FnPtr<void, StatusInfo*, CustomEvent*> dataHandler)
 {
-    /* YOUR_JOB: Add code to initialize the services used by the application.*/
     ret_code_t                        err_code;
     CustInitChar                     cus_init;
 
