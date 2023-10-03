@@ -21,7 +21,7 @@ MCP9808::MCP9808()
  /**
  * @brief TWI events handler. Called within the TWI interrupt handler
  */
-void twiHandler(nrf_drv_twi_evt_t const * p_event, void * p_context)	   
+void TwiHandler(nrf_drv_twi_evt_t const * p_event, void * p_context)	   
 {
     MCP9808* mcp9808 = static_cast<MCP9808*>(p_context);
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -31,14 +31,14 @@ void twiHandler(nrf_drv_twi_evt_t const * p_event, void * p_context)
         case NRF_DRV_TWI_EVT_DONE:
 	  if (p_event->xfer_desc.type == NRF_DRV_TWI_XFER_TX)
 	  {
-	      m_xfer_done = true;	// TODO HUZZI: use sync method
+	      // m_xfer_done = true;	// TODO HUZZI: use sync method
+	      vTaskNotifyGiveFromISR(mcp9808->mTaskHandle, &xHigherPriorityTaskWoken);
 	  }
 	  else if (p_event->xfer_desc.type == NRF_DRV_TWI_XFER_RX)
 	  {
-	      //m_rx_done = true;     // TODO HUZZI: use sync method
 	      vTaskNotifyGiveFromISR(mcp9808->mTaskHandle, &xHigherPriorityTaskWoken);
-
 	  }
+
 	  break;
 
         default:
@@ -57,17 +57,21 @@ void MCP9808::Start()
        .clear_bus_init     = false
     };
     
-    ret_code_t err_code = nrf_drv_twi_init(&m_twi, &mI2cConfig, twiHandler, this);
-    APP_ERROR_CHECK(err_code);
+    ret_code_t errCode = nrf_drv_twi_init(&m_twi, &mI2cConfig, TwiHandler, this);
+    if (errCode != 0)
+    {
+        return;
+    }
+    //APP_ERROR_CHECK(err_code);
 
     nrf_drv_twi_enable(&m_twi);	
 
-    Write(Register::AMBIENT, 1);
+    
 
     // TODO: create a task      --  think about stack size!
     if (xTaskCreate(MCP9808::Process, "Process", 100, this, 0, &mTaskHandle) != pdPASS)	
     {
-        APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
+       // APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);  // TODO: add check
     } 
 }
 
@@ -80,6 +84,9 @@ void MCP9808::Process(void* instance)
 
 void MCP9808::Run()
 {
+    Write(Register::AMBIENT, 1);
+    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
     while(true)
     {
         Read();
@@ -93,13 +100,18 @@ void MCP9808::Run()
 void MCP9808::Write(uint8_t reg, uint8_t size)
 {
     ret_code_t errorCode = nrf_drv_twi_tx(&m_twi, MCP9808_ADDR, &reg, size, false);
-    APP_ERROR_CHECK(errorCode);
-    while(!m_xfer_done);	  // TODO HUZZI change to sync
+    if (errorCode != 0)
+    {
+        return;
+    }
+   // APP_ERROR_CHECK(errorCode);
+    //while(!m_xfer_done);	  // TODO HUZZI change to sync
 }
 
 void MCP9808::Read()
 {
     uint8_t rawData[2] = {0};
     ret_code_t errorCode = nrf_drv_twi_rx(&m_twi, MCP9808_ADDR, rawData, 2);
-    APP_ERROR_CHECK(errorCode);
+    // TODO: add check
+    //APP_ERROR_CHECK(errorCode);
 }
