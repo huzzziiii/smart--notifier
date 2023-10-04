@@ -111,6 +111,7 @@
     <folder Name="Application">
       <file file_name="../../../main.c">
         <configuration Name="Release" build_exclude_from_build="Yes" />
+        <configuration Name="Debug" build_exclude_from_build="Yes" />
       </file>
       <file file_name="../config/sdk_config.h" />
       <file file_name="main.cpp">
@@ -176,23 +177,17 @@
         <file file_name="CustomDrivers/mcp9808.cpp" />
       </folder>
       <folder Name="inc">
-<<<<<<< HEAD
         <file file_name="CustomDrivers/uart.h" />
         <file file_name="CustomDrivers/mcp9808.h" />
-=======
-        <file file_name="mcp9808.h" />
-        <file file_name="uart.h" />
->>>>>>> 16dca8d (...)
       </folder>
     </folder>
     <folder Name="Publisher Subscriber">
       <file file_name="PublisherSubscriber/Publisher.h" />
       <file file_name="PublisherSubscriber/Subscriber.h" />
+      <configuration Name="Debug" build_exclude_from_build="Yes" />
     </folder>
     <folder Name="Fifo">
-      <file file_name="Fifo.cpp">
-        <configuration Name="Release" build_exclude_from_build="Yes" />
-      </file>
+      <file file_name="Fifo/Fifo.cpp" />
       <file file_name="Fifo/Fifo.h" />
     </folder>
     <folder Name="SystemTask">
