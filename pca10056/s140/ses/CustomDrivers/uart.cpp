@@ -3,9 +3,10 @@
 
 static UART* pInstance;
 
-UART::UART(NRF_UART_Type& uartInstance, const UartCommParams& uartCommParams, Callback handler) 
+UART::UART(NRF_UART_Type& uartInstance, const UartCommParams& uartCommParams, Callback handler, DataUnit delimiter) 
 	      :   mUARTx(uartInstance),
-		mHandler(handler)
+		mHandler(handler),
+		mDelimiter(delimiter)
 {
         mUARTConfig.pselTxd	    = uartCommParams.txPinNo;
         mUARTConfig.pselRxd	    = uartCommParams.rxPinNo;
@@ -18,12 +19,14 @@ UART::UART(NRF_UART_Type& uartInstance, const UartCommParams& uartCommParams, Ca
         mUARTConfig.interruptFlags = NRF_UART_INT_MASK_TXDRDY | NRF_UART_INT_MASK_RXDRDY;
 
         pInstance = this;
-   //     mSemaphore = xSemaphoreCreateBinary();
+        
 
-   //     if (!mSemaphore)
-   //     {
-	  ////throw;
-   //     }
+        mSemaphore = xSemaphoreCreateBinary();
+
+        if (!mSemaphore)
+        {
+	  //throw;
+        }
 }
 
 void UART::Init()
@@ -78,11 +81,51 @@ void UART::IRQHandler()
         mFifoRx.Write(data);
     
          // if end-of-input byte (carriage return) is received, process the FIFO RX
-        if (data == '\r')
+        if (data == mDelimiter
+        )
         {
-	  mHandler(mFifoRx);
+	  mHandler(mFifoRx, mDelimiter);
         }
     }
+    
+    // byte is transmitted
+    if (isTxdRdyIRQSet && eventTxdRdy)
+    {
+        // disable the write interrupt
+        SetUARTReg(NRF_UART_EVENT_TXDRDY, 0);
+    
+        // continue sending each byte at a time until FIFO TX is empty
+        if (mFifoTx.IsEmpty())
+        {
+	  SetUARTReg(NRF_UART_TASK_STOPTX, 0);  // stop the transmission
+
+	  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+	  // unblock the task now the UART transmission is over
+	  //vTaskNotifyGiveFromISR(pdTRUE, portMAX_DELAY);
+	  //vTaskNotifyGiveFromISR(mTaskHandle, &xHigherPriorityTaskWoken);
+	  xSemaphoreGiveFromISR(mSemaphore, &xHigherPriorityTaskWoken);
+
+        }
+        else
+        {
+	  DataUnit value = mFifoTx.Read();
+	  WriteTXD(value);
+        }
+    }
+}
+
+void UART::StartTX(DataUnit* buffer, size_t length)
+{
+    // populate the TX FIFO
+    mFifoTx.WriteElements(buffer, length);
+
+    // enable the STARTTX task / UART transmitter	
+    SetUARTReg(NRF_UART_TASK_STARTTX, 1);
+
+    // Read the first byte and write to TXD to initiate a UART transmission
+    DataUnit value = mFifoTx.Read();
+    WriteTXD(value);
 }
     
 void UART::EnableUART()
@@ -126,6 +169,11 @@ uint32_t UART::GetRegValue(uint32_t reg) const
 uint32_t UART::ReadRXD() const
 {
     return mUARTx.RXD; 
+}
+
+void UART::WriteTXD(uint32_t value) 
+{
+    mUARTx.TXD = value;
 }
 
 

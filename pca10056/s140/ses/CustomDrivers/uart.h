@@ -6,6 +6,7 @@
 
 
 #include <FreeRTOS.h>
+#include <task.h>
 #include "semphr.h"
 
 
@@ -16,7 +17,7 @@
 
 using DataUnit = uint8_t;
 
-typedef void (*Callback)(Fifo<DataUnit> fifo); 
+typedef void (*Callback)(Fifo<DataUnit>& fifo, DataUnit delimiter); 
 
 
 // template<typename T>
@@ -137,24 +138,24 @@ class UART
 {
     public:
 
-    UART(NRF_UART_Type& uartInstance, const UartCommParams& uartCommParams, Callback handle);
+    UART(NRF_UART_Type& uartInstance, const UartCommParams& uartCommParams, Callback handle, DataUnit delimiter = '\r');
     void Init();
     void IRQHandler(); // TODO: make it private 
 
-    template<typename... Args>
-    void PrintUart(const char* format, Args... args)	// TODO RENAME
+    template<typename ...Args>
+    void Print(const char* format, Args... args)
     {
         char buffer[100] = {0};
-    
         std::snprintf(buffer, sizeof(buffer), format, args...);
         std::strcat(buffer, "\r\n");
         size_t length = strlen(buffer);
-    
-        //printf ("%s\n", buffer);
-    
-        StartTX(reinterpret_cast<DataUnit*> (buffer), length);
 
-        // block till binary semaphore becomes available 
+        // initiate UART transmission
+        StartTX(reinterpret_cast<DataUnit*>(buffer), length);
+        
+        // block till a UART transmission is done  
+        //uint32_t taskNotify = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
         if (xSemaphoreTake(mSemaphore, portMAX_DELAY) == pdTRUE) 
         {
             // TODO: remove [this code will only be executed when the semaphore is available...]
@@ -162,8 +163,12 @@ class UART
 	  m++;
         }
     }
+   
 
-    private:
+    private:    
+
+    // methods
+
     void SetTxRxPins();
     void SetConfigReg();
     void EnableUART();
@@ -172,11 +177,13 @@ class UART
     void ConfigureInterrupts();
     bool GetIRQStatus(uint32_t  mask) const;
     uint32_t GetRegValue(uint32_t reg) const;
-    //bool GetRegValue(nrf_uart_event_t uartRegOffset) const;
-    uint32_t ReadRXD() const;
 
-    void TXByte(DataUnit data);
+    uint32_t ReadRXD() const;
+    void WriteTXD(uint32_t value) ;
+
     void StartTX(DataUnit* buffer, size_t length); 
+
+    // variables
 
     Callback mHandler;
     SemaphoreHandle_t mSemaphore;	// TODO: NEEDED
@@ -186,8 +193,11 @@ class UART
 
     Fifo<DataUnit> mFifoRx;
     Fifo<DataUnit> mFifoTx;
+
+    DataUnit mDelimiter;
     
     bool mNewInput = false;
+
     
     //void SetUARTReg(uint32_t reg, uint32_t value) // TODO - change fctn name
     //{

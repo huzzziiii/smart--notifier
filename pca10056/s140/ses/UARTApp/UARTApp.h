@@ -10,10 +10,10 @@ class UARTApp
 {
     public:
     UARTApp(SystemTask& systemTask);
-    static void UARTCallback(Fifo<DataUnit> fifoRx);
+    static void UARTCallback(Fifo<DataUnit>& fifoRx, DataUnit delimiter);
     
     private:
-    void Parse(Fifo<DataUnit> fifo, DataUnit* dst);
+    void Parse(Fifo<DataUnit>& fifo, DataUnit* dst, DataUnit delimiter);
 
     SystemTask& mSystemTask;
     static UARTApp* mInstance;

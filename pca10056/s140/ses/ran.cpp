@@ -200,18 +200,18 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 /**@brief Function for starting advertising. */
  void advertising_start(void * p_erase_bonds)
 {
-    bool erase_bonds = *(bool*)p_erase_bonds;
+    //bool erase_bonds = *(bool*)p_erase_bonds;
 
-    if (erase_bonds)
-    {
-        //delete_bonds();
-        // Advertising is started by PM_EVT_PEERS_DELETE_SUCCEEDED event.
-    }
-    else
-    {
+    //if (erase_bonds)
+    //{
+    //    //delete_bonds();
+    //    // Advertising is started by PM_EVT_PEERS_DELETE_SUCCEEDED event.
+    //}
+    //else
+    //{
         ret_code_t err_code = ble_advertising_start(&m_advertising, BLE_ADV_MODE_FAST);
         //APP_ERROR_CHECK(err_code);
-    }
+//    }
 }
 
 
@@ -390,5 +390,6 @@ void ble_init()
 
     // Create a FreeRTOS task for the BLE stack.
     // The task will run advertising_start() before entering its loop.
+    // advertising_start(NULL);
     nrf_sdh_freertos_init(advertising_start, NULL);
 }

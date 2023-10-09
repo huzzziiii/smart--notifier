@@ -6,6 +6,7 @@
 #include "SystemTask.h"
 #include "UartApp.h"
 
+
 #include <stdint.h>
 #include <string.h>
 
@@ -21,20 +22,21 @@ static void log_init(void)
 
 UartCommParams commParams = 
 {
-    .rxPinNo = RX_PIN_NUMBER,
-    .txPinNo = TX_PIN_NUMBER,
-    .rtsPinNo = RTS_PIN_NUMBER,
-    .ctsPinNo = CTS_PIN_NUMBER,
-    .hwFlowCntl = UartHwFcDisabled,
-    .useParity = false,
-    .baudRate = NRF_UART_BAUDRATE_115200,
-    .irqPriority = APP_IRQ_PRIORITY_LOWEST
+    .rxPinNo       = RX_PIN_NUMBER,
+    .txPinNo       = TX_PIN_NUMBER,
+    .rtsPinNo      = RTS_PIN_NUMBER,
+    .ctsPinNo      = CTS_PIN_NUMBER,
+    .hwFlowCntl  = UartHwFcDisabled,
+    .useParity     = false,
+    .baudRate    = NRF_UART_BAUDRATE_115200,
+    .irqPriority	 = APP_IRQ_PRIORITY_LOWEST
 };
 
+// Temperature sensor instance
 MCP9808 tempSensor;
 
 // UART instance
-UART uart{*NRF_UART0, commParams, UARTApp::UARTCallback};
+UART uart {*NRF_UART0, commParams, UARTApp::UARTCallback};
 
 // System task
 SystemTask systemTask{tempSensor, uart};
@@ -44,17 +46,10 @@ SystemTask systemTask{tempSensor, uart};
  */
 int main(void)
 {
-    //log_init();
+    ble_init();
 
     systemTask.Start();
 
-    ble_init();
-
     // Start FreeRTOS scheduler
     vTaskStartScheduler();
-
-    //for (;;)
-    //{
-    //    APP_ERROR_HANDLER(NRF_ERROR_FORBIDDEN);
-    //}
 }

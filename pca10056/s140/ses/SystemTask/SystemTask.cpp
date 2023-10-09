@@ -36,13 +36,16 @@ void SystemTask::Run()
     
     uint8_t rcvdMsg;
     Message curMsg;
+    
+    //mUART.Print("...Welcome...");
 
     while(true)
     {
         if (xQueueReceive(mTaskQueue, &rcvdMsg, portMAX_DELAY) == pdPASS)      // wait for the user input over UART (for now!)
         {
 	  curMsg = static_cast<Message>(rcvdMsg);	
-	  const char* msgStr = msgLookup[static_cast<uint8_t>(rcvdMsg)].msgStr;
+	  const char* msgStr = msgLookup[static_cast<uint8_t>(curMsg)].msgStr;
+	  mUART.Print("Received System message: %s", msgStr);
             // mUart.PrintUart("Received System message: %s", msgStr);
 
 	  switch (curMsg)
@@ -71,17 +74,17 @@ void SystemTask::PushMessage(SystemTask::Message message)
     xQueueSendFromISR(mTaskQueue, &message, &xHigherPriorityTaskWoken);
 }
 
-SystemTask::Message SystemTask::GetMessage(const char* str) 
+SystemTask::Message SystemTask::GetMessage(DataUnit* value) 
 {
-    if (!strcmp("tempOn", str))
+    if (!strcmp("tempOn", reinterpret_cast<const char*>(value)))
     {
         return Message::SUBSCRIBE_TEMP_NOTIFICATIONS;
     }
 
-    if (!strcmp("tempOff", str))
+    if (!strcmp("tempOff", reinterpret_cast<const char*>(value)))
     {
         return Message::UNSUBSCRIBE_TEMP_NOTIFICATIONS;
     }
+
     return Message::INVALID;
 }
-

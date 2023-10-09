@@ -23,7 +23,7 @@ class SystemTask
     SystemTask(MCP9808& mcp9808, UART& uart);
     void Start();
     void PushMessage(SystemTask::Message message);
-    static Message GetMessage(const char* str);
+    static Message GetMessage(DataUnit* str);
 
     private:
 

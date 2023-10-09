@@ -66,7 +66,6 @@ void MCP9808::Start()
 
     nrf_drv_twi_enable(&m_twi);	
 
-    
 
     // TODO: create a task      --  think about stack size!
     if (xTaskCreate(MCP9808::Process, "Process", 100, this, 0, &mTaskHandle) != pdPASS)	

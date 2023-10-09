@@ -24,6 +24,7 @@
       gcc_cplusplus_language_standard="c++20"
       gcc_debugging_level="Level 3"
       gcc_entry_point="Reset_Handler"
+      gcc_optimization_level="Level 0"
       linker_output_format="hex"
       linker_printf_fmt_level="long"
       linker_printf_width_precision_supported="Yes"
