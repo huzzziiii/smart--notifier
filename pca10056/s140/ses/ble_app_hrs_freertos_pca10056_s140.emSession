@@ -6,14 +6,13 @@
   <BreakpointListItem trigger="" line="162" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="notifier_service.cpp" useHWbreakpoint="false"/>
   <BreakpointListItem trigger="" line="180" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="notifier_service.cpp" useHWbreakpoint="false"/>
   <BreakpointListItem trigger="" line="64" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="notifier_service.cpp" useHWbreakpoint="false"/>
-  <BreakpointListItem trigger="" line="339" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="ran.cpp" useHWbreakpoint="false"/>
   <BreakpointListItem trigger="" line="34" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="4" filename="ran.cpp" useHWbreakpoint="false"/>
-  <BreakpointListItem trigger="" line="348" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="ran.cpp" useHWbreakpoint="false"/>
-  <BreakpointListItem trigger="" line="358" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="ran.cpp" useHWbreakpoint="false"/>
+  <BreakpointListItem trigger="" line="369" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="ran.cpp" useHWbreakpoint="false"/>
+  <BreakpointListItem trigger="" line="378" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="ran.cpp" useHWbreakpoint="false"/>
+  <BreakpointListItem trigger="" line="384" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="ran.cpp" useHWbreakpoint="false"/>
   <BreakpointListItem trigger="" line="50" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="4" filename="ran.cpp" useHWbreakpoint="false"/>
-  <BreakpointListItem trigger="" line="51" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="SystemTask/SystemTask.cpp" useHWbreakpoint="false"/>
-  <BreakpointListItem trigger="" line="76" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="4" filename="SystemTask/SystemTask.cpp" useHWbreakpoint="false"/>
-  <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault"/>
+  <BreakpointListItem trigger="" line="50" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="2" filename="SystemTask/SystemTask.cpp" useHWbreakpoint="false"/>
+  <BreakpointListItem trigger="" line="75" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="4" filename="SystemTask/SystemTask.cpp" useHWbreakpoint="false"/>
  </Breakpoints>
  <ExecutionProfileWindow/>
  <FrameBufferWindow>
@@ -35,6 +34,7 @@
   <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140"/>
   <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140"/>
   <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140;Application"/>
+  <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140;BLE"/>
   <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140;Board Definition"/>
   <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140;Custom BLE"/>
   <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140;Custom BLE;Notifier Service"/>
@@ -43,8 +43,6 @@
   <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140;Custom Drivers;src"/>
   <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140;Fifo"/>
   <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140;None"/>
-  <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140;nRF_Log"/>
-  <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140;nRF_SoftDevice"/>
   <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140;Publisher Subscriber"/>
   <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140;Segger Startup Files"/>
   <ProjectSessionItem path="ble_app_hrs_freertos_pca10056_s140;ble_app_hrs_freertos_pca10056_s140;SystemTask"/>
@@ -81,11 +79,11 @@
    <Watchpoint expression="ptr1" name="ptr1" radix="-1" linenumber="0" filename="../ses"/>
    <Watchpoint expression="ptr2" name="ptr2" radix="-1" linenumber="0" filename="../ses"/>
    <Watchpoint expression="value" name="value" radix="1" linenumber="0" filename="../ses"/>
-   <Watchpoint expression="this->mFifoTx" name="mFifoTx" radix="-1" linenumber="0" filename=""/>
-   <Watchpoint expression="buffer" name="buffer" radix="-1" linenumber="0" filename=""/>
-   <Watchpoint expression="mBuffer" name="mBuffer" radix="16" linenumber="0" filename=""/>
-   <Watchpoint expression="fifo" name="fifo" radix="-1" linenumber="0" filename=""/>
-   <Watchpoint expression="dst" name="dst" radix="16" linenumber="0" filename=""/>
+   <Watchpoint expression="this->mFifoTx" name="mFifoTx" radix="-1" linenumber="0" filename="../ses"/>
+   <Watchpoint expression="buffer" name="buffer" radix="-1" linenumber="0" filename="../ses"/>
+   <Watchpoint expression="mBuffer" name="mBuffer" radix="16" linenumber="0" filename="../ses"/>
+   <Watchpoint expression="fifo" name="fifo" radix="-1" linenumber="0" filename="../ses"/>
+   <Watchpoint expression="dst" name="dst" radix="16" linenumber="0" filename="../ses"/>
   </Watches>
  </Watch1>
  <Watch2>
@@ -99,12 +97,12 @@
  </Watch4>
  <Files>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="554" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../main.c" selected="0" top="525" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="49" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="main.cpp" selected="1" top="20" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="358" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/main.cpp" useBinaryEdit="0" left="0" path="ran.cpp" selected="0" top="329" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="75" y="90" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="ran.h" selected="0" top="56" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="ble_controller.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="2" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="main.cpp" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="77" y="193" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/main.cpp" useBinaryEdit="0" left="0" path="ran.cpp" selected="0" top="172" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="20" y="63" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/ran.cpp" useBinaryEdit="0" left="0" path="ran.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="96" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="ble_controller.h" selected="0" top="52" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="2068" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/CustomDrivers/mcp9808.cpp" useBinaryEdit="0" left="0" path="../../../../../../external/freertos/source/tasks.c" selected="0" top="2049" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="1" y="24" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/mcp9808.cpp" useBinaryEdit="0" left="0" path="Publisher.cpp" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="24" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/mcp9808.cpp" useBinaryEdit="0" left="0" path="Publisher.cpp" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="40" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../../../integration/nrfx/legacy/nrf_drv_uart.c" selected="0" top="21" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/integration/nrfx/legacy/nrf_drv_uart.c" useBinaryEdit="0" left="0" path="../../../../../../integration/nrfx/legacy/nrf_drv_uart.h" selected="0" top="622" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="220" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/integration/nrfx/legacy/nrf_drv_twi.c" useBinaryEdit="0" left="0" path="../../../../../../modules/nrfx/drivers/src/nrfx_twi.c" selected="0" top="202" codecName="Default"/>
@@ -114,26 +112,31 @@
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="39" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/mcp9808.cpp" useBinaryEdit="0" left="0" path="../../../../../../integration/nrfx/legacy/nrf_drv_twi.c" selected="0" top="23" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="430" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/modules/nrfx/drivers/src/nrfx_twi.c" useBinaryEdit="0" left="0" path="../../../../../../modules/nrfx/hal/nrf_twi.h" selected="0" top="408" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="224" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/modules/nrfx/mdk/nrf52840.h" useBinaryEdit="0" left="0" path="../../../../../../components/toolchain/cmsis/include/core_cm4.h" selected="0" top="202" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="12" y="27" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/SystemTask/SystemTask.cpp" useBinaryEdit="0" left="0" path="SystemTask/SystemTask.h" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="51" y="99" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="CustomDrivers/uart.cpp" selected="0" top="75" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="50" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/UARTApp/UARTApp.cpp" useBinaryEdit="0" left="0" path="SystemTask/SystemTask.cpp" selected="0" top="31" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="27" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/SystemTask/SystemTask.cpp" useBinaryEdit="0" left="0" path="SystemTask/SystemTask.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="99" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="CustomDrivers/uart.cpp" selected="0" top="75" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="15" y="61" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/UARTApp/UARTApp.cpp" useBinaryEdit="0" left="0" path="SystemTask/SystemTask.cpp" selected="0" top="31" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="86" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/main.cpp" useBinaryEdit="0" left="0" path="../../../../../../components/boards/pca10056.h" selected="0" top="64" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="15" y="153" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/SystemTask/SystemTask.cpp" useBinaryEdit="0" left="0" path="CustomDrivers/uart.h" selected="0" top="132" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="153" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/SystemTask/SystemTask.cpp" useBinaryEdit="0" left="0" path="CustomDrivers/uart.h" selected="0" top="132" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="6" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/CustomDrivers/mcp9808.cpp" useBinaryEdit="0" left="0" path="CustomDrivers/mcp9808.h" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="190" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/CustomDrivers/uart.h" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/util/app_util.h" selected="0" top="168" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="55" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../../../modules/nrfx/soc/nrfx_irqs_nrf52840.h" selected="0" top="37" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="55" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../../../modules/nrfx/mdk/nrf51_to_nrf52840.h" selected="0" top="38" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="48" y="79" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="CustomDrivers/mcp9808.cpp" selected="0" top="88" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="179" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="notifier_service.cpp" selected="0" top="160" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="9" y="17" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/CustomDrivers/uart.cpp" useBinaryEdit="0" left="0" path="Fifo/Fifo.h" selected="0" top="4" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="40" y="24" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/main.cpp" useBinaryEdit="0" left="0" path="UARTApp/UARTApp.cpp" selected="0" top="7" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="73" y="12" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="UARTApp/UARTApp.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="79" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="CustomDrivers/mcp9808.cpp" selected="0" top="52" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="212" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="notifier_service.cpp" selected="0" top="170" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="17" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/CustomDrivers/uart.cpp" useBinaryEdit="0" left="0" path="Fifo/Fifo.h" selected="0" top="4" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="38" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/main.cpp" useBinaryEdit="0" left="0" path="UARTApp/UARTApp.cpp" selected="0" top="7" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="12" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="UARTApp/UARTApp.h" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="PublisherSubscriber/Subscriber.h" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="30" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="NotificationManager.h" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="34" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="NotificationManager.cpp" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="479" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../../../components/softdevice/s140/headers/nrf_nvic.h" selected="0" top="460" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="91" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/ran.cpp" useBinaryEdit="0" left="0" path="../../../../../../components/softdevice/common/nrf_sdh_freertos.c" selected="0" top="73" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="132" y="96" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/notifier_service.cpp" useBinaryEdit="0" left="0" path="notifier_service.h" selected="0" top="64" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="42" y="86" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/notifier_service.cpp" useBinaryEdit="0" left="0" path="notifier_service.h" selected="0" top="73" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="62" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="BLE/BLE_Controller.cpp" selected="1" top="29" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="33" y="63" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="BLE/BLE_Controller.h" selected="0" top="42" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/BLE/BLE_Controller.h" useBinaryEdit="0" left="0" path="BLE/NotifierService.h" selected="0" top="95" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="BLE/NotifierService.cpp" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="11" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="BLE_Controller.h" selected="0" top="0" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="ble_app_hrs_freertos_pca10056_s140" fileDialogDefaultFilter="*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.hxx" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/Fifo" debugSearchPath="" autoConnectCapabilities="3711"/>
+ <ARMCrossStudioWindow activeProject="ble_app_hrs_freertos_pca10056_s140" fileDialogDefaultFilter="*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.hxx" autoConnectTarget="J-Link" buildConfiguration="Debug" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="/Users/huzaifaasif/Projects/nRF_SDK_17/nRF5_SDK_17.1.0_ddde560/examples/ble_peripheral/smart--notifier/pca10056/s140/ses/BLE" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

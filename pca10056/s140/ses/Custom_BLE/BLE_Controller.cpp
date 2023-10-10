@@ -1,4 +1,5 @@
-#include "ran.h"
+#include "NotifierService.h"
+#include "BLE_Controller.h"
 
 #include "bsp.h"
 
@@ -10,8 +11,9 @@
 //#include "nrf_log_default_backends.h"
 #include "nrf_sdh_ble.h"
 #include "nrf_sdh_freertos.h"
+#include "ble_advertising.h"
 
-#include "notifier_service.h"
+
 #include "UARTApp.h"
 
 BLE_CUS_DEF(m_cus);
@@ -402,9 +404,6 @@ void BLEController::ServicesInit()
     
     NotifierService notifierService;
     err_code = notifierService.Init(&m_cus, &cus_init, DataCallbackAdapter, this);
-
-    int m = 0;
-    m++;
     APP_ERROR_CHECK(err_code);	
 }
 
@@ -427,4 +426,3 @@ void BLEController::Init()
     // advertising_start(NULL);
     nrf_sdh_freertos_init(advertising_start, NULL);
 }
-

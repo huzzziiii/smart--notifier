@@ -1,4 +1,4 @@
-#include "notifier_service.h"
+#include "NotifierService.h"
 #include "sdk_common.h"
 
 #include <string.h>

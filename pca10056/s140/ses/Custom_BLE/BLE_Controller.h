@@ -13,7 +13,7 @@
 #include "nrf_ble_gatt.h"
 #include "nrf_ble_qwr.h"
 
-#include "notifier_service.h"	  // TODO HUZZI : move
+#include "NotifierService.h"	  // TODO HUZZI : move
 #include "SystemTask.h"
 
 
@@ -76,7 +76,6 @@ void gatt_init(void);
 void advertising_init(void);
 
 void services_init(const SystemTask& systemTask);
-//void services_init(FnPtr<void, CustomEvent*> fnPtr);
 
 void ble_init();
 
