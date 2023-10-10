@@ -5,55 +5,32 @@
 
 #include <cstdint>
 
-// TODO HUZZI: move elsewhere
-template <typename Ret, typename... Args>
-using FnPtr = Ret(*)(Args...);
 
-
-static constexpr uint8_t CUSTOM_SERVICE_UUID_BASE[] = {0xBC, 0x8A, 0xBF, 0x45, 0xCA, 0x05, 0x50, 0xBA, 0x40, 0x42, 0xB0, 0x00, 0xC9, 0xAD, 0x64, 0xF3};
-static constexpr uint16_t  CUSTOM_SERVICE_UUID	  =  0x1400;
+static constexpr uint8_t    CUSTOM_SERVICE_UUID_BASE[] = {0xBC, 0x8A, 0xBF, 0x45, 0xCA, 0x05, 0x50, 0xBA, 0x40, 0x42, 0xB0, 0x00, 0xC9, 0xAD, 0x64, 0xF3};
+static constexpr uint16_t  CUSTOM_SERVICE_UUID	        =  0x1400;
 static constexpr uint16_t  CUSTOM_VALUE_CHAR_UUID    =  0x1401;
 
-#define BLE_UUID_TYPE_VENDOR_BEGIN	         0x02		
 
-
-static ble_uuid_t m_adv_uuids_cust[]          =                                          /**< Universally unique service identifier. */
+/**< Universally unique service identifier. */
+static ble_uuid_t m_adv_uuids_cust[]  =                                     
 {
     {CUSTOM_SERVICE_UUID, BLE_UUID_TYPE_VENDOR_BEGIN}
 };
 
 
-//    static ble_uuid_t m_adv_uuids[] =                                   /**< Universally unique service identifiers. */
-//{
-//    {BLE_UUID_HEART_RATE_SERVICE, BLE_UUID_TYPE_BLE},
-//    {BLE_UUID_BATTERY_SERVICE, BLE_UUID_TYPE_BLE},
-//    {BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}
-//};
-
-/**@brief   Macro for defining a ble_cus instance.
- *
- * @param   _name   Name of the instance.
- * @hideinitializer
- */
-//#define BLE_CUS_DEF(_name)                                                                          \
-//static StatusInfo _name;  
-
-
-
-#define BLE_CUS_DEF(_name)                                                                          \
-static StatusInfo _name;                                                                             \
-NRF_SDH_BLE_OBSERVER(_name ## _obs,                                                                 \
-				         BLE_HRS_BLE_OBSERVER_PRIO,                                                     \
+#define BLE_CUS_DEF(_name)                                                                       \
+static StatusInfo _name;								        \
+NRF_SDH_BLE_OBSERVER(_name ## _obs,                                                 \
+				         BLE_HRS_BLE_OBSERVER_PRIO,                 \
 				         ble_cus_on_ble_evt, &_name)
 
 
 				         
-struct BleUserData
+struct BLEUserData
 {
-    const uint8_t* buffer;
-    uint8_t bytes;
+    const uint8_t* buffer;	   /**< pointer to the buffer containing user data */
+    uint8_t bytes;		       /**< number of received bytes */
 };
-
 
 enum EventType 
 {
@@ -65,8 +42,13 @@ enum EventType
 struct CustomEvent
 {
     EventType eventType;
-    BleUserData userData;
+    BLEUserData userData;
 };
+
+
+template <typename Ret, typename... Args>
+using FnPtr = Ret(*)(Args...);
+using DataCallbackFn = FnPtr<void, CustomEvent*, void*>;	/**< alias for a function pointer to the user-provided data callback for processing BLE data
 
 
 /**@brief Custom Service init structure. This contains all options and data needed for initialization of the service. */
@@ -83,8 +65,8 @@ struct StatusInfo
     uint16_t			      serviceHandle;	         /**< Handle of the custom service. */
     ble_gatts_char_handles_t	    customValueHandle;	 /**< Handles related to the Custom Value characteristic. */
     uint16_t			      connectionHandle;            /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
-    FnPtr<void, CustomEvent*, void*> dataHandler;		    /**< Callback for data handling */
-    void*				       context;	// todo huzzi
+    DataCallbackFn		         dataHandler;		  /**< Callback for data handling */
+    void*				       context;			    /**< User-provided context that will be passed back to the callback i.e, an object instance */
 };
 
 
@@ -92,13 +74,7 @@ class NotifierService
 {
     public:
 
-    //uint32_t Init(StatusInfo* statusInfo, CustInitChar* customInitChar, FnPtr<void, CustomEvent*> dataCallback, void* context);
-
-    uint32_t Init(StatusInfo* statusInfo, CustInitChar* customInitChar, FnPtr<void, CustomEvent*, void*> dataCallback, void* context);
-
-    private:
-    
-
+    uint32_t Init(StatusInfo* statusInfo, CustInitChar* customInitChar, DataCallbackFn dataCallback, void* context);    
 };
 
 

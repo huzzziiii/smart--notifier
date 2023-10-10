@@ -13,7 +13,7 @@
 #include "nrf_ble_gatt.h"
 #include "nrf_ble_qwr.h"
 
-#include "NotifierService.h"	  // TODO HUZZI : move
+#include "NotifierService.h"	  
 #include "SystemTask.h"
 
 
@@ -38,31 +38,9 @@
 
 
 
-//#define CUSTOM_SERVICE_UUID			        0x1400	      // TODO HUZZI: move into custom_service.hpp
-//#define CUSTOM_VALUE_CHAR_UUID		   0x1401
-
-			              /**< Vendor UUID types start at this index (128-bit). */
-
-
-//static ble_uuid_t m_adv_uuids[] =                                   /**< Universally unique service identifiers. */
-//{
-//    {BLE_UUID_HEART_RATE_SERVICE, BLE_UUID_TYPE_BLE},
-//    {BLE_UUID_BATTERY_SERVICE, BLE_UUID_TYPE_BLE},
-//    {BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}
-//};
-
-//static ble_uuid_t m_adv_uuids[]          =                                     
-//{
-//    {CUSTOM_SERVICE_UUID, BLE_UUID_TYPE_VENDOR_BEGIN}
-//};
-
-
-BLE_BAS_DEF(m_bas);                                                 /**< Battery service instance. */
-BLE_HRS_DEF(m_hrs);                                                 /**< Heart rate service instance. */
 NRF_BLE_GATT_DEF(m_gatt);                                           /**< GATT module instance. */
-NRF_BLE_QWR_DEF(m_qwr);                                             /**< Context for the Queued Write module.*/
-BLE_ADVERTISING_DEF(m_advertising);                                 /**< Advertising module instance. */
-
+NRF_BLE_QWR_DEF(m_qwr);                                            /**< Context for the Queued Write module.*/
+BLE_ADVERTISING_DEF(m_advertising);                          /**< Advertising module instance. */
 
 
 
@@ -74,9 +52,7 @@ void conn_params_init(void);
 void gap_params_init(void);
 void gatt_init(void);
 void advertising_init(void);
-
 void services_init(const SystemTask& systemTask);
-
 void ble_init();
 
 
@@ -87,7 +63,7 @@ class BLEController
     BLEController(SystemTask& systemTask);
     void Init();
     void ServicesInit();
-    static void DataCallbackAdapter(CustomEvent* customEvent, void* context);
+    //static void DataCallbackAdapter(CustomEvent* customEvent, void* context);
     void DataCallback(CustomEvent* customEvent);
 
     private:

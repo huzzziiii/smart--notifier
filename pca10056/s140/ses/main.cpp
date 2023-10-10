@@ -1,7 +1,4 @@
-
-
-
-#include "BLE_Controller.h"	        // TODO HUZZI
+#include "BLE_Controller.h"	 
 #include "mcp9808.h"
 #include "SystemTask.h"
 #include "UartApp.h"
@@ -41,6 +38,7 @@ UART uart {*NRF_UART0, commParams, UARTApp::UARTCallback};
 // System task
 SystemTask systemTask{tempSensor, uart};
 
+// BLE Controller (initializes the Notifier service as well)
 BLEController bleController{systemTask};
 
 
@@ -49,7 +47,6 @@ BLEController bleController{systemTask};
 int main(void)
 {
     bleController.Init();
-    //ble_init();
 
     systemTask.Start();
 

@@ -56,7 +56,7 @@ static uint32_t custom_value_char_add(StatusInfo * p_cus, const CustInitChar * p
 }
 
 
-uint32_t NotifierService::Init(StatusInfo* statusInfo, CustInitChar* customInitChar, FnPtr<void, CustomEvent*, void*> dataCallback, void* context)
+uint32_t NotifierService::Init(StatusInfo* statusInfo, CustInitChar* customInitChar, DataCallbackFn dataCallback, void* context)
 {
     if (!customInitChar || !statusInfo)
     {

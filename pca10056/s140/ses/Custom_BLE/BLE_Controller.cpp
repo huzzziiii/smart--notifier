@@ -259,22 +259,22 @@ static void conn_params_error_handler(uint32_t nrf_error)
 /**@brief Function for initializing the Connection Parameters module. */
  void conn_params_init(void)
 {
-    ret_code_t             err_code;
+    uint32_t		        err_code;
     ble_conn_params_init_t cp_init;
 
     memset(&cp_init, 0, sizeof(cp_init));
 
-    cp_init.p_conn_params                  = NULL;
-    cp_init.first_conn_params_update_delay = FIRST_CONN_PARAMS_UPDATE_DELAY;
-    cp_init.next_conn_params_update_delay  = NEXT_CONN_PARAMS_UPDATE_DELAY;
-    cp_init.max_conn_params_update_count   = MAX_CONN_PARAMS_UPDATE_COUNT;
-    cp_init.start_on_notify_cccd_handle    = m_hrs.hrm_handles.cccd_handle;
-    cp_init.disconnect_on_fail             = false;
-    cp_init.evt_handler                    = on_conn_params_evt;
-    cp_init.error_handler                  = conn_params_error_handler;
+    cp_init.p_conn_params			    = NULL;
+    cp_init.first_conn_params_update_delay  = FIRST_CONN_PARAMS_UPDATE_DELAY;
+    cp_init.next_conn_params_update_delay = NEXT_CONN_PARAMS_UPDATE_DELAY;
+    cp_init.max_conn_params_update_count = MAX_CONN_PARAMS_UPDATE_COUNT;
+    cp_init.start_on_notify_cccd_handle	         = BLE_GATT_HANDLE_INVALID;
+    cp_init.disconnect_on_fail		      = false;
+    cp_init.evt_handler				= on_conn_params_evt;
+    cp_init.error_handler			         = conn_params_error_handler;
 
     err_code = ble_conn_params_init(&cp_init);
-    //APP_ERROR_CHECK(err_code);
+    APP_ERROR_CHECK(err_code);
 }
 
 
@@ -301,9 +301,9 @@ static void conn_params_error_handler(uint32_t nrf_error)
 
     memset(&gap_conn_params, 0, sizeof(gap_conn_params));
 
-    gap_conn_params.min_conn_interval = MIN_CONN_INTERVAL;
+    gap_conn_params.min_conn_interval  = MIN_CONN_INTERVAL;
     gap_conn_params.max_conn_interval = MAX_CONN_INTERVAL;
-    gap_conn_params.slave_latency     = SLAVE_LATENCY;
+    gap_conn_params.slave_latency	   = SLAVE_LATENCY;
     gap_conn_params.conn_sup_timeout  = CONN_SUP_TIMEOUT;
 
     err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
@@ -361,6 +361,9 @@ void advertising_init(void)
     ble_advertising_conn_cfg_tag_set(&m_advertising, APP_BLE_CONN_CFG_TAG);
 }
 
+/**@brief			       Process user data received over the BLE service
+ *  @param customEvent  containing relevant info including the buffer containing received user data
+ */
 void BLEController::DataCallback(CustomEvent* customEvent)
 {
     uint8_t dst[100] = {0};
@@ -368,19 +371,23 @@ void BLEController::DataCallback(CustomEvent* customEvent)
     uint8_t size = customEvent->userData.bytes;
     const uint8_t* buffer = customEvent->userData.buffer;
 
+    // read the user data into a Fifo
     for (uint8_t idx = 0; idx < size; idx++)
     {
         fifo.Write(buffer[idx]);
     }
-
+    
+    // parse the user data
     UARTApp::Parse(fifo, dst);
+
+    // extract the message out of it
     SystemTask::Message msg = SystemTask::GetMessage(dst);
 
     // BLE custom service received user data - propagate over to SystemTask
     mSystemTask.PushMessage(msg, false);
 }
 
-void BLEController::DataCallbackAdapter(CustomEvent* customEvent, void* context)   // TODO: can be made a free function
+static void DataCallbackAdapter(CustomEvent* customEvent, void* context) 
 {
     BLEController* bleController = static_cast<BLEController*>(context);
     bleController->DataCallback(customEvent);
