@@ -41,12 +41,15 @@ UART uart {*NRF_UART0, commParams, UARTApp::UARTCallback};
 // System task
 SystemTask systemTask{tempSensor, uart};
 
+BLEController bleController{systemTask};
+
 
 /**@brief Function for application main entry.
  */
 int main(void)
 {
-    ble_init();
+    bleController.Init();
+    //ble_init();
 
     systemTask.Start();
 

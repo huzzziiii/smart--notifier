@@ -12,6 +12,7 @@
 #include "nrf_sdh_freertos.h"
 
 #include "notifier_service.h"
+#include "UARTApp.h"
 
 BLE_CUS_DEF(m_cus);
 
@@ -28,7 +29,7 @@ static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;    /**< Handle of the c
  *
  */
 static void on_cus_evt(StatusInfo        * p_cus_service,	    // TODO HUZZI modify name / and move
-				CustomEvent * p_evt)
+				CustomEvent  * p_evt)
 {
     switch(p_evt->eventType)
     {
@@ -42,6 +43,12 @@ static void on_cus_evt(StatusInfo        * p_cus_service,	    // TODO HUZZI modi
               // No implementation needed.
               break;
     }
+}
+
+static void Foo(SystemTask& systemTask, CustomEvent* ev)
+{
+    int m = 0;
+    m++;
 }
 
 /**@brief Function for handling advertising events.
@@ -323,31 +330,6 @@ static void nrf_qwr_error_handler(uint32_t nrf_error)
 }
 
 
-void services_init(FnPtr<void, StatusInfo*, CustomEvent*> dataHandler)
-{
-    ret_code_t                        err_code;
-    CustInitChar                     cus_init;
-
-    nrf_ble_qwr_init_t qwrInit = {0};
-
-    // init nRF Queued Write Module
-    qwrInit.error_handler = nrf_qwr_error_handler;
-
-    err_code = nrf_ble_qwr_init(&m_qwr, &qwrInit);
-    //APP_ERROR_CHECK(err_code);
-
-     // Initialize CUS Service init structure to zero.
-    memset(&cus_init, 0, sizeof(cus_init));
-    
-    NotifierService notifierService;
-    err_code = notifierService.Init(&m_cus, &cus_init, dataHandler);
-
-    int m =0;
-    m++;
-    //APP_ERROR_CHECK(err_code);	
-}
-
-
 /**@brief Function for initializing the Advertising functionality. */
 void advertising_init(void)
 {
@@ -377,19 +359,72 @@ void advertising_init(void)
     ble_advertising_conn_cfg_tag_set(&m_advertising, APP_BLE_CONN_CFG_TAG);
 }
 
-void ble_init()
+void BLEController::DataCallback(CustomEvent* customEvent)
+{
+    uint8_t dst[100] = {0};
+    Fifo<uint8_t> fifo;
+    uint8_t size = customEvent->userData.bytes;
+    const uint8_t* buffer = customEvent->userData.buffer;
+
+    for (uint8_t idx = 0; idx < size; idx++)
+    {
+        fifo.Write(buffer[idx]);
+    }
+
+    UARTApp::Parse(fifo, dst);
+    SystemTask::Message msg = SystemTask::GetMessage(dst);
+
+    // BLE custom service received user data - propagate over to SystemTask
+    mSystemTask.PushMessage(msg, false);
+}
+
+void BLEController::DataCallbackAdapter(CustomEvent* customEvent, void* context)   // TODO: can be made a free function
+{
+    BLEController* bleController = static_cast<BLEController*>(context);
+    bleController->DataCallback(customEvent);
+}
+
+void BLEController::ServicesInit()
+{
+    ret_code_t                        err_code;
+    CustInitChar                     cus_init;
+
+    nrf_ble_qwr_init_t qwrInit = {0};
+
+    // init nRF Queued Write Module
+    qwrInit.error_handler = nrf_qwr_error_handler;
+
+    err_code = nrf_ble_qwr_init(&m_qwr, &qwrInit);
+    //APP_ERROR_CHECK(err_code);
+
+     // Initialize CUS Service init structure to zero.
+    memset(&cus_init, 0, sizeof(cus_init));
+    
+    NotifierService notifierService;
+    err_code = notifierService.Init(&m_cus, &cus_init, DataCallbackAdapter, this);
+
+    int m = 0;
+    m++;
+    APP_ERROR_CHECK(err_code);	
+}
+
+BLEController::BLEController(SystemTask& systemTask) : mSystemTask(systemTask)
+{
+    // no-op
+}
+
+void BLEController::Init()
 {
     ble_stack_init();
     gap_params_init();
     gatt_init();
-    services_init(on_cus_evt);
+    ServicesInit(); 
     advertising_init();
-    //sensor_simulator_init();
     conn_params_init();
-    //peer_manager_init();
 
     // Create a FreeRTOS task for the BLE stack.
     // The task will run advertising_start() before entering its loop.
     // advertising_start(NULL);
     nrf_sdh_freertos_init(advertising_start, NULL);
 }
+

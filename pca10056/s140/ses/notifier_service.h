@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ble_srv_common.h"
+#include "SystemTask.h"
 
 #include <cstdint>
 
@@ -42,21 +43,30 @@ static ble_uuid_t m_adv_uuids_cust[]          =                                 
 #define BLE_CUS_DEF(_name)                                                                          \
 static StatusInfo _name;                                                                             \
 NRF_SDH_BLE_OBSERVER(_name ## _obs,                                                                 \
-                     BLE_HRS_BLE_OBSERVER_PRIO,                                                     \
-                     ble_cus_on_ble_evt, &_name)
+				         BLE_HRS_BLE_OBSERVER_PRIO,                                                     \
+				         ble_cus_on_ble_evt, &_name)
+
+
+				         
+struct BleUserData
+{
+    const uint8_t* buffer;
+    uint8_t bytes;
+};
 
 
 enum EventType 
 {
     BLE_CUS_EVT_DISCONNECTED,
-    BLE_CUS_EVT_CONNECTED
+    BLE_CUS_EVT_CONNECTED,
+    BLE_CUS_EVT_USER_DATA_RX
 };
 
 struct CustomEvent
 {
     EventType eventType;
+    BleUserData userData;
 };
-
 
 
 /**@brief Custom Service init structure. This contains all options and data needed for initialization of the service. */
@@ -69,11 +79,12 @@ struct CustInitChar
  /**@brief Custom Service structure. This contains various status information for the service. */
 struct StatusInfo
 {
-    uint8_t			     uuidType;
-    uint16_t			    serviceHandle;		     /**< Handle of the custom service. */
-    ble_gatts_char_handles_t   customValueHandle;	       /**< Handles related to the Custom Value characteristic. */
-    uint16_t			   connectionHandle;            /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
-    FnPtr<void, StatusInfo*, CustomEvent*> dataHandler;       /**< Callback for data handling */
+    uint8_t			       uuidType;
+    uint16_t			      serviceHandle;	         /**< Handle of the custom service. */
+    ble_gatts_char_handles_t	    customValueHandle;	 /**< Handles related to the Custom Value characteristic. */
+    uint16_t			      connectionHandle;            /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
+    FnPtr<void, CustomEvent*, void*> dataHandler;		    /**< Callback for data handling */
+    void*				       context;	// todo huzzi
 };
 
 
@@ -81,11 +92,12 @@ class NotifierService
 {
     public:
 
-    uint32_t Init(StatusInfo* statusInfo, CustInitChar* customInitChar, FnPtr<void, StatusInfo*, CustomEvent*> fnPtr);
+    //uint32_t Init(StatusInfo* statusInfo, CustInitChar* customInitChar, FnPtr<void, CustomEvent*> dataCallback, void* context);
+
+    uint32_t Init(StatusInfo* statusInfo, CustInitChar* customInitChar, FnPtr<void, CustomEvent*, void*> dataCallback, void* context);
 
     private:
-    //FnPtr<void, StatusInfo*, CustomEvent*> mDataCallback;
-
+    
 
 };
 

@@ -14,8 +14,10 @@
 #include "nrf_ble_qwr.h"
 
 #include "notifier_service.h"	  // TODO HUZZI : move
+#include "SystemTask.h"
 
-#define DEVICE_NAME				    "NXy-HUZ"                            /**< Name of device. Will be included in the advertising data. */
+
+#define DEVICE_NAME				    "NuX"                            /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME                   "NordicSemiconductor"                   /**< Manufacturer. Will be passed to Device Information Service. */
 
 #define APP_BLE_OBSERVER_PRIO               3                                       /**< Application's BLE observer priority. You shouldn't need to modify this value. */
@@ -65,13 +67,31 @@ BLE_ADVERTISING_DEF(m_advertising);                                 /**< Adverti
 
 
 void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context);
-void ble_stack_init(void);
+void ble_stack_init();
 void bsp_event_handler(bsp_event_t event);
 void advertising_start(void * p_erase_bonds);
 void conn_params_init(void);
 void gap_params_init(void);
 void gatt_init(void);
 void advertising_init(void);
-void services_init(FnPtr<void, StatusInfo*, CustomEvent*> fnPtr);
+
+void services_init(const SystemTask& systemTask);
+//void services_init(FnPtr<void, CustomEvent*> fnPtr);
 
 void ble_init();
+
+
+class BLEController
+{
+    public:
+
+    BLEController(SystemTask& systemTask);
+    void Init();
+    void ServicesInit();
+    static void DataCallbackAdapter(CustomEvent* customEvent, void* context);
+    void DataCallback(CustomEvent* customEvent);
+
+    private:
+
+     SystemTask& mSystemTask;
+};

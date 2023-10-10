@@ -46,7 +46,6 @@ void SystemTask::Run()
 	  curMsg = static_cast<Message>(rcvdMsg);	
 	  const char* msgStr = msgLookup[static_cast<uint8_t>(curMsg)].msgStr;
 	  mUART.Print("Received System message: %s", msgStr);
-            // mUart.PrintUart("Received System message: %s", msgStr);
 
 	  switch (curMsg)
 	  {
@@ -67,11 +66,19 @@ void SystemTask::Run()
     }
 }
 
-void SystemTask::PushMessage(SystemTask::Message message)
+void SystemTask::PushMessage(SystemTask::Message message, bool fromISR)
 {
     BaseType_t xHigherPriorityTaskWoken;
     xHigherPriorityTaskWoken = pdFALSE;
-    xQueueSendFromISR(mTaskQueue, &message, &xHigherPriorityTaskWoken);
+
+    if (fromISR)
+    {
+        xQueueSendFromISR(mTaskQueue, &message, &xHigherPriorityTaskWoken);
+    }
+    else
+    {
+        xQueueSend(mTaskQueue, &message, 0);
+    }
 }
 
 SystemTask::Message SystemTask::GetMessage(DataUnit* value) 

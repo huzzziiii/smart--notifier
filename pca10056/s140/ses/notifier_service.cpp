@@ -41,7 +41,7 @@ static uint32_t custom_value_char_add(StatusInfo * p_cus, const CustInitChar * p
     attr_char_value.p_attr_md = &attr_md;
     attr_char_value.init_len  = sizeof(uint8_t);
     attr_char_value.init_offs = 0;
-    attr_char_value.max_len   = sizeof(uint8_t);
+    attr_char_value.max_len   = sizeof(uint8_t) * 10;
 
     err_code = sd_ble_gatts_characteristic_add(p_cus->serviceHandle, 
 							         &char_md,
@@ -56,7 +56,7 @@ static uint32_t custom_value_char_add(StatusInfo * p_cus, const CustInitChar * p
 }
 
 
-uint32_t NotifierService::Init(StatusInfo* statusInfo, CustInitChar* customInitChar, FnPtr<void, StatusInfo*, CustomEvent*> dataHandler)
+uint32_t NotifierService::Init(StatusInfo* statusInfo, CustInitChar* customInitChar, FnPtr<void, CustomEvent*, void*> dataCallback, void* context)
 {
     if (!customInitChar || !statusInfo)
     {
@@ -65,7 +65,8 @@ uint32_t NotifierService::Init(StatusInfo* statusInfo, CustInitChar* customInitC
     }
 
     statusInfo->connectionHandle = BLE_CONN_HANDLE_INVALID;
-    statusInfo->dataHandler = dataHandler;
+    statusInfo->dataHandler = dataCallback;
+    statusInfo->context = context;
 
     ble_uuid128_t baseUUID; 
     memcpy(baseUUID.uuid128, CUSTOM_SERVICE_UUID_BASE, sizeof(CUSTOM_SERVICE_UUID_BASE));
@@ -114,9 +115,6 @@ uint32_t NotifierService::Init(StatusInfo* statusInfo, CustInitChar* customInitC
 
 
 
-
-
-
 /* This code belongs in ble_cus.c*/
 
 /**@brief Function for handling the Connect event.
@@ -148,17 +146,17 @@ static void on_disconnect(StatusInfo *p_cus, ble_evt_t const * p_ble_evt)
  * @param[in]   p_cus       Custom Service structure.
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
-static void on_write(StatusInfo * p_cus, ble_evt_t const * p_ble_evt)
+static void on_write(StatusInfo* p_cus, const ble_evt_t* p_ble_evt)
 {
    if (p_cus == NULL || p_ble_evt == NULL)
    {
        return;
    }
 
-    ble_gatts_evt_write_t const * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+    const ble_gatts_evt_write_t* p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
 
 
-   // Check if the handle passed with the event matches the Custom Value Characteristic handle ==> NOTE: CCCD characteristic is 2 bytes
+    // Check if the handle passed with the event matches the Custom Value Characteristic handle ==> NOTE: CCCD characteristic is 2 bytes
     if ( (p_evt_write->handle == p_cus->customValueHandle.cccd_handle) && (p_evt_write->len == 2))
     {
         if (ble_srv_is_notification_enabled(p_evt_write->data))
@@ -174,12 +172,14 @@ static void on_write(StatusInfo * p_cus, ble_evt_t const * p_ble_evt)
     }
     else if ( (p_evt_write->handle == p_cus->customValueHandle.value_handle) && p_cus->dataHandler != NULL)
     {
-        int m = 1;
-	  m++;
+        CustomEvent customEvent;
+        customEvent.userData.buffer = p_evt_write->data;
+        customEvent.userData.bytes = p_evt_write->len;
+        customEvent.eventType = BLE_CUS_EVT_USER_DATA_RX;
+    
+        p_cus->dataHandler(&customEvent, p_cus->context);
     }
-
 }
-
 
 
 void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
@@ -190,7 +190,6 @@ void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
     {
         return;
     }
-
     
     switch (p_ble_evt->header.evt_id)
     {
