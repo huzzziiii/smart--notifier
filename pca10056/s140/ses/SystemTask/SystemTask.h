@@ -2,6 +2,7 @@
 
 #include "uart.h"
 #include "mcp9808.h"
+#include "NotifierService.h"
 
 #include <FreeRTOS.h>
 #include <task.h>
