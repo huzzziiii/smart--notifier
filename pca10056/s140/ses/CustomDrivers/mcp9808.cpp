@@ -13,7 +13,7 @@ static bool volatile m_xfer_done = false;        // TODO HUZZI: rmv
 static bool volatile m_rx_done = false;        // TODO HUZZI: rmv
 
 
-MCP9808::MCP9808()
+MCP9808::MCP9808() : Publisher(Category::TEMPERATURE)
 {
     // TODO HUZZI
 }

@@ -22,7 +22,7 @@ class MCP9808 : public Publisher
     MCP9808(); //= default;
 
     void Start();
-    
+    uint16_t GetTempInC() const;
     uint16_t ToCelcius();
     
 
@@ -37,6 +37,7 @@ class MCP9808 : public Publisher
 
     TaskHandle_t mTaskHandle;
 
+
     private:
     void Config();
 
@@ -45,6 +46,7 @@ class MCP9808 : public Publisher
 
     static void Process(void* instance);
     void Run();
+
     
 
 
