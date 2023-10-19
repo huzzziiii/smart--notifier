@@ -142,9 +142,17 @@ class UART
     void Init();
     void IRQHandler(); // TODO: make it private 
 
+
     template<typename ...Args>
     void Print(const char* format, Args... args)
     {
+  //      if (xSemaphoreTake(mSemaphore, portMAX_DELAY) != pdTRUE) 
+  //      {
+  //         // TODO: remove [this code will only be executed when the semaphore is available...]
+	 //int m = 4;
+	 //m++;
+//      }
+
         char buffer[100] = {0};
         std::snprintf(buffer, sizeof(buffer), format, args...);
         std::strcat(buffer, "\r\n");
@@ -156,12 +164,19 @@ class UART
         // block till a UART transmission is done  
         //uint32_t taskNotify = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
-        if (xSemaphoreTake(mSemaphore, portMAX_DELAY) == pdTRUE) 
+        if (xSemaphoreTake(mSemaphore, portMAX_DELAY) != pdTRUE) 
         {
             // TODO: remove [this code will only be executed when the semaphore is available...]
 	  int m = 4;
 	  m++;
+	  throw 10;
         }
+
+   //     if (xSemaphoreGive(mSemaphore) != pdTRUE)
+   //     {
+	  //int y = 0;
+	  //y++;
+   //     }
     }
    
 

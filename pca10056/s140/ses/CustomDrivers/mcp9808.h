@@ -22,6 +22,8 @@ class MCP9808 : public Publisher
     MCP9808(); //= default;
 
     void Start();
+
+    void ParseTempInC();		
     uint16_t GetTempInC() const;
     uint16_t ToCelcius();
     
@@ -35,6 +37,7 @@ class MCP9808 : public Publisher
         // ...
     };
 
+    uint16_t mTempInC;
     TaskHandle_t mTaskHandle;
 
 

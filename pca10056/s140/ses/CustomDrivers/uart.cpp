@@ -25,7 +25,7 @@ UART::UART(NRF_UART_Type& uartInstance, const UartCommParams& uartCommParams, Ca
 
         if (!mSemaphore)
         {
-	  //throw;
+	  throw 5;
         }
 }
 
@@ -81,8 +81,7 @@ void UART::IRQHandler()
         mFifoRx.Write(data);
     
          // if end-of-input byte (carriage return) is received, process the FIFO RX
-        if (data == mDelimiter
-        )
+        if (data == mDelimiter)
         {
 	  mHandler(mFifoRx, mDelimiter);
         }
@@ -102,8 +101,6 @@ void UART::IRQHandler()
 	  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
 	  // unblock the task now the UART transmission is over
-	  //vTaskNotifyGiveFromISR(pdTRUE, portMAX_DELAY);
-	  //vTaskNotifyGiveFromISR(mTaskHandle, &xHigherPriorityTaskWoken);
 	  xSemaphoreGiveFromISR(mSemaphore, &xHigherPriorityTaskWoken);
 
         }

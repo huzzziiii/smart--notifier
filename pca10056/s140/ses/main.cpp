@@ -2,6 +2,7 @@
 #include "mcp9808.h"
 #include "SystemTask.h"
 #include "UartApp.h"
+#include "NotificationManager.h"
 
 
 #include <stdint.h>
@@ -15,6 +16,19 @@ static void log_init(void)
     //APP_ERROR_CHECK(err_code);
 
     //NRF_LOG_DEFAULT_BACKENDS_INIT();
+}
+
+extern "C"
+ {
+    void vApplicationStackOverflowHook( TaskHandle_t xTask, signed char *pcTaskName )
+    {
+        ( void ) pcTaskName;
+        ( void ) xTask;
+
+        UBaseType_t uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
+    
+        while(1);
+    }
 }
 
 UartCommParams commParams = 
@@ -35,11 +49,17 @@ MCP9808 tempSensor;
 // UART instance
 UART uart {*NRF_UART0, commParams, UARTApp::UARTCallback};
 
+// BLE Notifier Service
+NotifierService notifierService;
+
+// Notification Manager
+NotificationManager notificationManager{notifierService, uart, &tempSensor};
+
 // System task
-SystemTask systemTask{tempSensor, uart};
+SystemTask systemTask{tempSensor, uart};   
 
 // BLE Controller (initializes the Notifier service as well)
-BLEController bleController{systemTask};
+BLEController bleController{notifierService, systemTask};    // TODO: use ble service
 
 
 /**@brief Function for application main entry.

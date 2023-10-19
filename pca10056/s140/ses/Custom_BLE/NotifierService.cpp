@@ -16,7 +16,7 @@ static uint32_t custom_value_char_add(StatusInfo * p_cus, const CustInitChar * p
 
     char_md.char_props.read   = 1;
     char_md.char_props.write  = 1;
-    char_md.char_props.notify = 0; 
+    char_md.char_props.notify = 1; 
     char_md.p_char_user_desc  = NULL;
     char_md.p_char_pf         = NULL;
     char_md.p_user_desc_md    = NULL;
@@ -73,7 +73,11 @@ uint32_t NotifierService::Init(StatusInfo* statusInfo, CustInitChar* customInitC
 
     // add a vendor specific base UUID to the BLE stack's table
     uint32_t retCode =  sd_ble_uuid_vs_add(&baseUUID, &statusInfo->uuidType);
-    VERIFY_SUCCESS(retCode);
+    if (retCode != NRF_SUCCESS)
+    {
+        return retCode;
+    }
+    //VERIFY_SUCCESS(retCode);
     
     ble_uuid_t bleUuid;
     bleUuid.type = statusInfo->uuidType;
@@ -81,11 +85,11 @@ uint32_t NotifierService::Init(StatusInfo* statusInfo, CustInitChar* customInitC
 
     // Add the Custom Service
     retCode = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &bleUuid, &statusInfo->serviceHandle);
-    VERIFY_SUCCESS(retCode);
-    //if (err_code != NRF_SUCCESS)
-    //{
-    //    return err_code;
-    //}
+    //VERIFY_SUCCESS(retCode);
+    if (retCode != NRF_SUCCESS)
+    {
+        return retCode;
+    }
 
     // Add read/write permissions for the characteristic value attribute
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&customInitChar->customCharAttr.read_perm);
@@ -94,8 +98,6 @@ uint32_t NotifierService::Init(StatusInfo* statusInfo, CustInitChar* customInitC
 
      // Add Custom Value characteristic
     return custom_value_char_add(statusInfo, customInitChar);
-
-    //return retCode;   // TODO HUZZI
 
 }
 

@@ -39,12 +39,14 @@ bool Publisher::Unsubscribe(Subscriber* subscriberToUnsubscribe)
 
 void Publisher::Notify()
 {
-    
-    for (const auto subscriber : mSubscribers)
-    {   
-        if (subscriber != nullptr)
-        {
-	  subscriber->Update(this);
+    if (mSubscriberCount > 0)
+    {
+        for (const auto subscriber : mSubscribers)
+        {   
+            if (subscriber != nullptr)
+            {
+	      subscriber->Update(this);
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ void NotificationManager::PushNotification(Notification notification)
 {
     mNotifications.Write(notification);
     mUART.Print(notification.msg);
+   
     //int ret = mBLENotifierSrv.UpdateValue(reinterpret_cast<uint8_t*>(notification.msg));
     //if (ret != NRF_SUCCESS)
     //{
@@ -34,52 +35,31 @@ void NotificationManager::Update(Publisher* publisher)
         case Publisher::Category::TEMPERATURE:
         {
 	  MCP9808* mcp9808 = dynamic_cast<MCP9808*>(publisher);
+	  if (mcp9808 == nullptr)
+	  {
+	      return;
+	  }
+
 	  uint16_t value = mcp9808->GetTempInC();
 
-	  char msg[100] = {0};
+	  char msg[30] = {0};
 	  snprintf (msg, sizeof(msg) - 1, "Temp = %uC", value);
-	  PushNotification(MakeNotification(msg, Publisher::Category::TEMPERATURE));
+
+
+	  //Notification notification;
+	  //strncpy(notification.msg, msg, sizeof(notification.msg) - 1);
+	  //notification.category = Publisher::Category::TEMPERATURE;
+
+	  Notification notification = MakeNotification(msg, Publisher::Category::TEMPERATURE);
+	  //mUART.Print(notification.msg);
+	  PushNotification(notification);
 	  break;
         }
         
         default:
 	  break;
     }
-
-   // if (publisher == mPublishers[0]) 
-   // {
-   //     MCP9808* mcp9808 = dynamic_cast<MCP9808*>(publisher);
-   //     if (!mcp9808)
-   //     {
-	  //// TODO: error handling
-   //     }
-
-   //     uint16_t tempInC = mcp9808->GetTempInC();
-   //     int m = 0;
-   //     m++;
-   // }
 }
-
-
-//void NotificationManager::Update(Publisher* publisher)
-//{
-//    // retrieve the publisher's category
-//    auto category = GetPublisherCategory(publisher);
-
-//    switch(category)
-//    {
-//        case Publisher::Category::TEMPERATURE:
-//        {
-//	  MCP9808* tempSensor = static_cast<MCP9808*>(publisher);
-//	  uint16_t value = tempSensor->ToCelcius();
-//	  // store value into a notifications FIFO
-//	  break;
-//        }
-
-//        default:
-//	  break;
-//    }
-//}
 
 //Publisher::Category NotificationManager::GetPublisherCategory(Publisher* requestedPublisher)
 //{

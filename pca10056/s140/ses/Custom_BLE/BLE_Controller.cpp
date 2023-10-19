@@ -47,12 +47,6 @@ static void on_cus_evt(StatusInfo        * p_cus_service,	    // TODO HUZZI modi
     }
 }
 
-static void Foo(SystemTask& systemTask, CustomEvent* ev)
-{
-    int m = 0;
-    m++;
-}
-
 /**@brief Function for handling advertising events.
  *
  * @details This function will be called for advertising events which are passed to the application.
@@ -95,9 +89,18 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
         case BLE_GAP_EVT_CONNECTED:
          //   NRF_LOG_INFO("Connected");
             err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
+	  if (err_code != NRF_SUCCESS)
+	  {
+	      throw 5;
+	  }
+
             //APP_ERROR_CHECK(err_code);
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
             err_code = nrf_ble_qwr_conn_handle_assign(&m_qwr, m_conn_handle);
+	  if (err_code != NRF_SUCCESS)
+	  {
+	      throw 5;
+	  }
             //APP_ERROR_CHECK(err_code);
             break;
 
@@ -150,16 +153,28 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
     ret_code_t err_code;
 
     err_code = nrf_sdh_enable_request();
+    if (err_code != NRF_SUCCESS)
+    {
+        throw 5;
+    }
     //APP_ERROR_CHECK(err_code);
 
     // Configure the BLE stack using the default settings.
     // Fetch the start address of the application RAM.
     uint32_t ram_start = 0;
     err_code = nrf_sdh_ble_default_cfg_set(APP_BLE_CONN_CFG_TAG, &ram_start);
+    if (err_code != NRF_SUCCESS)
+    {
+        throw 5;
+    }
     //APP_ERROR_CHECK(err_code);
 
     // Enable BLE stack.
     err_code = nrf_sdh_ble_enable(&ram_start);
+    if (err_code != NRF_SUCCESS)
+    {
+        throw 5;
+    }
     //APP_ERROR_CHECK(err_code);
 
     // Register a handler for BLE events.
@@ -409,12 +424,17 @@ void BLEController::ServicesInit()
      // Initialize CUS Service init structure to zero.
     memset(&cus_init, 0, sizeof(cus_init));
     
-    NotifierService notifierService;
-    err_code = notifierService.Init(&m_cus, &cus_init, DataCallbackAdapter, this);
-    APP_ERROR_CHECK(err_code);	
+    //NotifierService notifierService;
+    err_code = mNotifierSrv.Init(&m_cus, &cus_init, DataCallbackAdapter, this);
+    if (err_code != NRF_SUCCESS)
+    {
+        return;
+    }
+    //APP_ERROR_CHECK(err_code);	
 }
 
-BLEController::BLEController(SystemTask& systemTask) : mSystemTask(systemTask)
+BLEController::BLEController(NotifierService& notifierService, SystemTask& systemTask) : mNotifierSrv(notifierService),
+														     mSystemTask(systemTask)
 {
     // no-op
 }

@@ -15,7 +15,7 @@ static bool volatile m_rx_done = false;        // TODO HUZZI: rmv
 
 MCP9808::MCP9808() : Publisher(Category::TEMPERATURE)
 {
-    // TODO HUZZI
+    // no-op
 }
 
  /**
@@ -68,9 +68,9 @@ void MCP9808::Start()
 
 
     // TODO: create a task      --  think about stack size!
-    if (xTaskCreate(MCP9808::Process, "Process", 100, this, 0, &mTaskHandle) != pdPASS)	
+    if (xTaskCreate(MCP9808::Process, "Process", 200, this, 0, &mTaskHandle) != pdPASS)	
     {
-       // APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);  // TODO: add check
+       APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);  // TODO: add check
     } 
 }
 
@@ -91,6 +91,10 @@ void MCP9808::Run()
         Read();
         
         uint32_t taskNotify = ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+        ParseTempInC();
+        Notify();
+
         vTaskDelay(pdMS_TO_TICKS(DELAY_MS_PER_READ));
     }
 }
@@ -109,8 +113,30 @@ void MCP9808::Write(uint8_t reg, uint8_t size)
 
 void MCP9808::Read()
 {
-    uint8_t rawData[2] = {0};
-    ret_code_t errorCode = nrf_drv_twi_rx(&m_twi, MCP9808_ADDR, rawData, 2);
+    ret_code_t errorCode = nrf_drv_twi_rx(&m_twi, MCP9808_ADDR, mRawTemp, 2);
     // TODO: add check
     //APP_ERROR_CHECK(errorCode);
+}
+
+void MCP9808::ParseTempInC()			  // TODO - get value in float!
+{
+    uint8_t upperByte = mRawTemp[0] & 0x1f;	  // mask out Alert pins
+    uint8_t lowerByte = mRawTemp[1];
+
+    uint8_t signedData = mRawTemp[0] & 0x10;	  // check the signedness of the value
+
+    if (signedData)
+    {
+        upperByte &= 0x0f;			  // clear SIGN bit
+        mTempInC = 256 - (upperByte << 4 | lowerByte >> 4);
+    }
+    else
+    {
+        mTempInC = upperByte << 4 | lowerByte >> 4;
+    } 
+}
+
+uint16_t MCP9808::GetTempInC() const
+{
+    return mTempInC;
 }
