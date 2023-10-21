@@ -16,8 +16,6 @@ void SystemTask::Start()
     // TODO: think about stack size!
     if (xTaskCreate(SystemTask::Process, "Run", 100, this, 0, &mTaskHandle) != pdPASS)   
     {
-        int m = 0;
-        m++;
         APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
     } 
 }

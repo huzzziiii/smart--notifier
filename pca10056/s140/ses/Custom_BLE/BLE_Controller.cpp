@@ -434,7 +434,7 @@ void BLEController::ServicesInit()
 }
 
 BLEController::BLEController(NotifierService& notifierService, SystemTask& systemTask) : mNotifierSrv(notifierService),
-														     mSystemTask(systemTask)
+													  	        mSystemTask(systemTask)
 {
     // no-op
 }

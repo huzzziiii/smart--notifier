@@ -56,67 +56,6 @@ static uint32_t custom_value_char_add(StatusInfo * p_cus, const CustInitChar * p
 }
 
 
-uint32_t NotifierService::Init(StatusInfo* statusInfo, CustInitChar* customInitChar, DataCallbackFn dataCallback, void* context)
-{
-    if (!customInitChar || !statusInfo)
-    {
-        // TODO: error handling
-        return NRF_ERROR_NULL;
-    }
-
-    statusInfo->connectionHandle = BLE_CONN_HANDLE_INVALID;
-    statusInfo->dataHandler = dataCallback;
-    statusInfo->context = context;
-
-    ble_uuid128_t baseUUID; 
-    memcpy(baseUUID.uuid128, CUSTOM_SERVICE_UUID_BASE, sizeof(CUSTOM_SERVICE_UUID_BASE));
-
-    // add a vendor specific base UUID to the BLE stack's table
-    uint32_t retCode =  sd_ble_uuid_vs_add(&baseUUID, &statusInfo->uuidType);
-    if (retCode != NRF_SUCCESS)
-    {
-        return retCode;
-    }
-    //VERIFY_SUCCESS(retCode);
-    
-    ble_uuid_t bleUuid;
-    bleUuid.type = statusInfo->uuidType;
-    bleUuid.uuid = CUSTOM_SERVICE_UUID;
-
-    // Add the Custom Service
-    retCode = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &bleUuid, &statusInfo->serviceHandle);
-    //VERIFY_SUCCESS(retCode);
-    if (retCode != NRF_SUCCESS)
-    {
-        return retCode;
-    }
-
-    // Add read/write permissions for the characteristic value attribute
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&customInitChar->customCharAttr.read_perm);
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&customInitChar->customCharAttr.write_perm); //(&cus_init.custom_value_char_attr_md.write_perm);
-
-
-     // Add Custom Value characteristic
-    return custom_value_char_add(statusInfo, customInitChar);
-
-}
-
-
-// void NotifierService::services_init(void)
-//{
-//    /* YOUR_JOB: Add code to initialize the services used by the application.*/
-//    ret_code_t                         err_code;
-//    ble_cus_init_t                     cus_init;
-
-//     // Initialize CUS Service init structure to zero.
-//    memset(&cus_init, 0, sizeof(cus_init));
-	
-//    err_code = ble_cus_init(&m_cus, &cus_init);
-//    APP_ERROR_CHECK(err_code);	
-//}
-
-
-
 /* This code belongs in ble_cus.c*/
 
 /**@brief Function for handling the Connect event.
@@ -163,14 +102,13 @@ static void on_write(StatusInfo* p_cus, const ble_evt_t* p_ble_evt)
     {
         if (ble_srv_is_notification_enabled(p_evt_write->data))
         {
-	  int m = 0;
-	  m++;
+	  p_cus->notificationEnabled = true;
         }
-        else
-        {
-	  int m = 1;
-	  m++;
-        }
+   //     else
+   //     {
+	  //int m = 1;
+	  //m++;
+   //     }
     }
     else if ( (p_evt_write->handle == p_cus->customValueHandle.value_handle) && p_cus->dataHandler != NULL)
     {
@@ -211,4 +149,99 @@ void ble_cus_on_ble_evt( ble_evt_t const * p_ble_evt, void * p_context)
             // No implementation needed.
             break;
     }
+}
+
+uint32_t NotifierService::UpdateValue(uint16_t value)
+{
+    if (!mStatusInfo->notificationEnabled)
+    {
+        return 0;
+    }
+
+    uint32_t err_code = NRF_SUCCESS;
+    ble_gatts_value_t gatts_value;
+
+    // Initialize value struct
+    memset(&gatts_value, 0, sizeof(gatts_value));
+
+    gatts_value.len     = sizeof(uint16_t);
+    gatts_value.offset  = 0;
+    gatts_value.p_value = reinterpret_cast<uint8_t*>(&value);
+
+    // Update database
+    err_code = sd_ble_gatts_value_set(mStatusInfo->connectionHandle,
+						    mStatusInfo->customValueHandle.value_handle, 
+						    &gatts_value);
+    if (err_code != NRF_SUCCESS)
+    {
+        return err_code;
+    }
+    
+    // Send value if connected and notifying
+    if ((mStatusInfo->connectionHandle != BLE_CONN_HANDLE_INVALID)) 
+    {
+        ble_gatts_hvx_params_t hvx_params;
+
+        memset(&hvx_params, 0, sizeof(hvx_params));
+
+        hvx_params.handle = mStatusInfo->customValueHandle.value_handle;
+        hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
+        hvx_params.offset = gatts_value.offset;
+        hvx_params.p_len  = &gatts_value.len;
+        hvx_params.p_data = gatts_value.p_value;
+
+        err_code = sd_ble_gatts_hvx(mStatusInfo->connectionHandle, &hvx_params);
+    }
+    else
+    {
+        err_code = NRF_ERROR_INVALID_STATE;
+    }
+
+    return err_code;
+}
+
+uint32_t NotifierService::Init(StatusInfo* statusInfo, CustInitChar* customInitChar, DataCallbackFn dataCallback, void* context)
+{
+    mStatusInfo = statusInfo;
+
+    if (!customInitChar || !statusInfo)
+    {
+        // TODO: error handling
+        return NRF_ERROR_NULL;
+    }
+
+    statusInfo->connectionHandle = BLE_CONN_HANDLE_INVALID;
+    statusInfo->dataHandler = dataCallback;
+    statusInfo->context = context;
+
+    ble_uuid128_t baseUUID; 
+    memcpy(baseUUID.uuid128, CUSTOM_SERVICE_UUID_BASE, sizeof(CUSTOM_SERVICE_UUID_BASE));
+
+    // add a vendor specific base UUID to the BLE stack's table
+    uint32_t retCode =  sd_ble_uuid_vs_add(&baseUUID, &statusInfo->uuidType);
+    if (retCode != NRF_SUCCESS)
+    {
+        return retCode;
+    }
+    //VERIFY_SUCCESS(retCode);
+    
+    ble_uuid_t bleUuid;
+    bleUuid.type = statusInfo->uuidType;
+    bleUuid.uuid = CUSTOM_SERVICE_UUID;
+
+    // Add the Custom Service
+    retCode = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &bleUuid, &statusInfo->serviceHandle);
+    //VERIFY_SUCCESS(retCode);
+    if (retCode != NRF_SUCCESS)
+    {
+        return retCode;
+    }
+
+    // Add read/write permissions for the characteristic value attribute
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&customInitChar->customCharAttr.read_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&customInitChar->customCharAttr.write_perm); //(&cus_init.custom_value_char_attr_md.write_perm);
+
+
+     // Add Custom Value characteristic
+    return custom_value_char_add(statusInfo, customInitChar);
 }

@@ -62,11 +62,12 @@ struct CustInitChar
 struct StatusInfo
 {
     uint8_t			       uuidType;
-    uint16_t			      serviceHandle;	         /**< Handle of the custom service. */
-    ble_gatts_char_handles_t	    customValueHandle;	 /**< Handles related to the Custom Value characteristic. */
-    uint16_t			      connectionHandle;            /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
-    DataCallbackFn		         dataHandler;		  /**< Callback for data handling */
-    void*				       context;			    /**< User-provided context that will be passed back to the callback i.e, an object instance */
+    uint16_t			      serviceHandle;	          /**< Handle of the custom service. */
+    ble_gatts_char_handles_t	    customValueHandle;	  /**< Handles related to the Custom Value characteristic. */
+    uint16_t			      connectionHandle;             /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
+    DataCallbackFn		         dataHandler;		   /**< Callback for data handling */
+    void*				       context;			     /**< User-provided context that will be passed back to the callback i.e, an object instance */
+    bool				       notificationEnabled{false}; /**< A flag indicating whether notification is enabled by the client */
 };
 
 
@@ -75,6 +76,11 @@ class NotifierService
     public:
 
     uint32_t Init(StatusInfo* statusInfo, CustInitChar* customInitChar, DataCallbackFn dataCallback, void* context);    
+    uint32_t UpdateValue(uint16_t value);
+
+    private:
+
+    StatusInfo* mStatusInfo = nullptr;
 };
 
 

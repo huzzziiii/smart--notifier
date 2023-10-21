@@ -25,6 +25,9 @@ extern "C"
         ( void ) pcTaskName;
         ( void ) xTask;
 
+        char buff[100] = {0};
+        strncpy(buff, (const char *)pcTaskName, configMAX_TASK_NAME_LEN);
+
         UBaseType_t uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
     
         while(1);

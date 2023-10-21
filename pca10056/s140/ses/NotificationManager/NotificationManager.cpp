@@ -14,15 +14,6 @@ void NotificationManager::PushNotification(Notification notification)
 {
     mNotifications.Write(notification);
     mUART.Print(notification.msg);
-   
-    //int ret = mBLENotifierSrv.UpdateValue(reinterpret_cast<uint8_t*>(notification.msg));
-    //if (ret != NRF_SUCCESS)
-    //{
-    //    int m = 0;
-    //    m++;
-    //}
-    int y=0;
-    y++;
 }
 
 void NotificationManager::Update(Publisher* publisher) 
@@ -53,6 +44,13 @@ void NotificationManager::Update(Publisher* publisher)
 	  Notification notification = MakeNotification(msg, Publisher::Category::TEMPERATURE);
 	  //mUART.Print(notification.msg);
 	  PushNotification(notification);
+
+	  int ret = mBLENotifierSrv.UpdateValue(value);
+	  if (ret != NRF_SUCCESS)
+	  {
+	      int m = 0;
+	      m++;
+	  }
 	  break;
         }
         
