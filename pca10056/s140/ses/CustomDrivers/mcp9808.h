@@ -50,9 +50,6 @@ class MCP9808 : public Publisher
     static void Process(void* instance);
     void Run();
 
-    
-
-
     uint8_t mRawTemp[2] = {0};
     nrf_drv_twi_config_t mI2cConfig;	
 

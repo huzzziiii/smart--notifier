@@ -59,7 +59,7 @@ NotifierService notifierService;
 NotificationManager notificationManager{notifierService, uart, &tempSensor};
 
 // System task
-SystemTask systemTask{tempSensor, uart};   
+SystemTask systemTask{notificationManager, tempSensor, uart};   
 
 // BLE Controller (initializes the Notifier service as well)
 BLEController bleController{notifierService, systemTask};    // TODO: use ble service

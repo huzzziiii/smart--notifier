@@ -6,11 +6,11 @@
 #include "nrf_delay.h"
 
 /* TWI instance ID. */
-#define TWI_INSTANCE_ID     0		// TODO HUZZI
+#define TWI_INSTANCE_ID				0		// TODO HUZZI
 
 static const nrf_drv_twi_t m_twi = NRF_DRV_TWI_INSTANCE(TWI_INSTANCE_ID);
 static bool volatile m_xfer_done = false;        // TODO HUZZI: rmv
-static bool volatile m_rx_done = false;        // TODO HUZZI: rmv
+static bool volatile m_rx_done = false;           // TODO HUZZI: rmv
 
 
 MCP9808::MCP9808() : Publisher(Category::TEMPERATURE)
@@ -62,10 +62,10 @@ void MCP9808::Start()
     {
         return;
     }
+    
     //APP_ERROR_CHECK(err_code);
 
     nrf_drv_twi_enable(&m_twi);	
-
 
     // TODO: create a task      --  think about stack size!
     if (xTaskCreate(MCP9808::Process, "Process", 200, this, 0, &mTaskHandle) != pdPASS)	

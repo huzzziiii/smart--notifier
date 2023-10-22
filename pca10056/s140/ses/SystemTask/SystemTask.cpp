@@ -4,7 +4,8 @@
 
 QueueHandle_t SystemTask::mTaskQueue;
 
-SystemTask::SystemTask(MCP9808& mcp9808, UART& uart) : 
+SystemTask::SystemTask(NotificationManager& notificationManager, MCP9808& mcp9808, UART& uart) : 
+    mNotificationManager(notificationManager),
     mMcp9808(mcp9808), 
     mUART(uart)
 {
@@ -49,11 +50,13 @@ void SystemTask::Run()
 	  {
 	      case Message::SUBSCRIBE_TEMP_NOTIFICATIONS:
 	      {
+		mNotificationManager.Subscribe(&mMcp9808);
 		break;
 	      }
 
 	      case Message::UNSUBSCRIBE_TEMP_NOTIFICATIONS:
 	      {
+		mNotificationManager.Unsubscribe(&mMcp9808);
 		break;
 	      }
 

@@ -59,14 +59,13 @@ void NotificationManager::Update(Publisher* publisher)
     }
 }
 
-//Publisher::Category NotificationManager::GetPublisherCategory(Publisher* requestedPublisher)
-//{
-//    for (auto* publisher : mPublishers)
-//    {
-//        if (publisher == requestedPublisher)
-//        {
-//	  return publisher->GetCategory();
-//        }
-//    }
-//    return Publisher::Category::MAX;
-//}
+void NotificationManager::Subscribe(Publisher* publisher)
+{
+    publisher->Subscribe(this);
+}
+
+void NotificationManager::Unsubscribe(Publisher* publisher)
+{
+    publisher->Unsubscribe(this);
+}
+

@@ -5,6 +5,8 @@
 #include "uart.h"
 #include "NotifierService.h"
 
+class NotifierService;
+
 struct Notification
 {
     char msg[100];
@@ -22,6 +24,9 @@ class NotificationManager : public Subscriber
         ((mPublishers[idx] = publishers), ...);
         mPublishers[idx++]->Subscribe(this);
     }
+
+    void Subscribe(Publisher*);
+    void Unsubscribe(Publisher*);
     
     void Update(Publisher*) override;
     Notification MakeNotification(char* msg, Publisher::Category category);

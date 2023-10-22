@@ -1,5 +1,6 @@
 #pragma once
 
+#include "NotificationManager.h"
 #include "uart.h"
 #include "mcp9808.h"
 #include "NotifierService.h"
@@ -9,6 +10,8 @@
 #include <queue.h>
 
 #define ENUM_ENTRY(x) { SystemTask::Message::x, #x }
+
+class NotificationManager;
 
 class SystemTask
 {
@@ -21,7 +24,7 @@ class SystemTask
         INVALID
     };
 
-    SystemTask(MCP9808& mcp9808, UART& uart);
+    SystemTask(NotificationManager& notificationManager, MCP9808& mcp9808, UART& uart);
     void Start();
     void PushMessage(SystemTask::Message message, bool fromISR = true);
     static Message GetMessage(DataUnit* str);
@@ -31,6 +34,7 @@ class SystemTask
     static void Process(void* instance);
     void Run();
 
+    NotificationManager& mNotificationManager;
     MCP9808& mMcp9808;
     UART& mUART;
 
