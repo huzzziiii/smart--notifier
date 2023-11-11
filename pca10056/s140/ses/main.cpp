@@ -69,8 +69,10 @@ BLEController bleController{notifierService, systemTask};    // TODO: use ble se
  */
 int main(void)
 {
+    // Initialize BLE controller
     bleController.Init();
 
+    // Start System task
     systemTask.Start();
 
     // Start FreeRTOS scheduler

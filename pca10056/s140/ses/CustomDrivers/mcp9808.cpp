@@ -140,3 +140,15 @@ uint16_t MCP9808::GetTempInC() const
 {
     return mTempInC;
 }
+
+void MCP9808::OnSubscribeChange(bool subscribeRequest) 
+{
+    if (subscribeRequest)
+    {
+       vTaskResume(mTaskHandle);
+    }
+    else
+    {
+        vTaskSuspend(mTaskHandle);
+    }
+}

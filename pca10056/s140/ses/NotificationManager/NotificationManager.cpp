@@ -13,7 +13,17 @@ Notification NotificationManager::MakeNotification(char* msg, Publisher::Categor
 void NotificationManager::PushNotification(Notification notification)
 {
     mNotifications.Write(notification);
+}
+
+void NotificationManager::PublishNotification(Notification notification, uint16_t value)
+{
     mUART.Print(notification.msg);
+    int ret = mBLENotifierSrv.UpdateValue(value);
+    if (ret != NRF_SUCCESS)
+    {
+        int m = 0;
+        m++;
+    }
 }
 
 void NotificationManager::Update(Publisher* publisher) 
@@ -36,21 +46,10 @@ void NotificationManager::Update(Publisher* publisher)
 	  char msg[30] = {0};
 	  snprintf (msg, sizeof(msg) - 1, "Temp = %uC", value);
 
-
-	  //Notification notification;
-	  //strncpy(notification.msg, msg, sizeof(notification.msg) - 1);
-	  //notification.category = Publisher::Category::TEMPERATURE;
-
 	  Notification notification = MakeNotification(msg, Publisher::Category::TEMPERATURE);
-	  //mUART.Print(notification.msg);
 	  PushNotification(notification);
+	  PublishNotification(notification, value);
 
-	  int ret = mBLENotifierSrv.UpdateValue(value);
-	  if (ret != NRF_SUCCESS)
-	  {
-	      int m = 0;
-	      m++;
-	  }
 	  break;
         }
         

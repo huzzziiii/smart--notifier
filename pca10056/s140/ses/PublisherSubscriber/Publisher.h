@@ -25,6 +25,7 @@ class Publisher
     bool Unsubscribe(Subscriber* subscriberToUnsubscribe);
     void Notify();
     Publisher::Category GetCategory();
+    virtual void OnSubscribeChange(bool subscribeRequest) {}
 
     private:
     bool SubscriberExists(Subscriber* subscriber);

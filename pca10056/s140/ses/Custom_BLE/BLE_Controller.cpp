@@ -347,31 +347,31 @@ static void nrf_qwr_error_handler(uint32_t nrf_error)
 }
 
 
-/**@brief Function for initializing the Advertising functionality. */
-void advertising_init(void)
+ void advertising_init(void)
 {
-    ret_code_t             err_code;
+    uint32_t               err_code;
     ble_advertising_init_t init;
 
     memset(&init, 0, sizeof(init));
 
-    init.advdata.name_type               = BLE_ADVDATA_FULL_NAME;
-    //init.advdata.name_type          = BLE_ADVDATA_SHORT_NAME;
-    //init.advdata.short_name_len     = 5;
+    init.advdata.name_type          = BLE_ADVDATA_FULL_NAME;
+    init.advdata.include_appearance = false;
+    init.advdata.flags              = BLE_GAP_ADV_FLAGS_LE_ONLY_LIMITED_DISC_MODE;
 
-    init.advdata.include_appearance	    = true;
-    init.advdata.flags			      = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
-    init.advdata.uuids_complete.uuid_cnt = sizeof(m_adv_uuids_cust) / sizeof(m_adv_uuids_cust[0]);
-    init.advdata.uuids_complete.p_uuids  = m_adv_uuids_cust;
+    init.srdata.uuids_complete.uuid_cnt = sizeof(m_adv_uuids_cust) / sizeof(m_adv_uuids_cust[0]);
+    init.srdata.uuids_complete.p_uuids  = m_adv_uuids_cust;
 
     init.config.ble_adv_fast_enabled  = true;
     init.config.ble_adv_fast_interval = APP_ADV_INTERVAL;
     init.config.ble_adv_fast_timeout  = APP_ADV_DURATION;
-
     init.evt_handler = on_adv_evt;
 
     err_code = ble_advertising_init(&m_advertising, &init);
-    //APP_ERROR_CHECK(err_code);
+    if (err_code != NRF_SUCCESS)
+    {
+        return;
+    }
+//    APP_ERROR_CHECK(err_code);
 
     ble_advertising_conn_cfg_tag_set(&m_advertising, APP_BLE_CONN_CFG_TAG);
 }

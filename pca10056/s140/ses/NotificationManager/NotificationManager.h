@@ -31,6 +31,7 @@ class NotificationManager : public Subscriber
     void Update(Publisher*) override;
     Notification MakeNotification(char* msg, Publisher::Category category);
     void PushNotification(Notification notification);
+    void PublishNotification(Notification notification, uint16_t value);
 
     private:
 

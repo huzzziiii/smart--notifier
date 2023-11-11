@@ -17,7 +17,7 @@
 #include "SystemTask.h"
 
 
-#define DEVICE_NAME				    "ZuL"                            /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME				    "Smart-Notifier"                                /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME                   "NordicSemiconductor"                   /**< Manufacturer. Will be passed to Device Information Service. */
 
 #define APP_BLE_OBSERVER_PRIO               3                                       /**< Application's BLE observer priority. You shouldn't need to modify this value. */

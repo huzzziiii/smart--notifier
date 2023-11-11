@@ -15,7 +15,7 @@ SystemTask::SystemTask(NotificationManager& notificationManager, MCP9808& mcp980
 void SystemTask::Start()
 {
     // TODO: think about stack size!
-    if (xTaskCreate(SystemTask::Process, "Run", 100, this, 0, &mTaskHandle) != pdPASS)   
+    if (xTaskCreate(SystemTask::Process, "Run", 300, this, 0, &mTaskHandle) != pdPASS)   
     {
         APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
     } 

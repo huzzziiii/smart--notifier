@@ -1,4 +1,6 @@
 #include "Publisher.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 Publisher::Publisher(Category category) : mCategory(category)
 {
@@ -18,6 +20,12 @@ bool Publisher::Subscribe(Subscriber* subscriber)
         {
 	  mSubscribers[mSubscriberCount++] = subscriber;
 	  subscriber->Subscribe(this);	// allow subscriber to track its publisher as well for lifetime management purposes
+
+	  // ensure scheduler has kicked off before
+	  if (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING)
+	  {
+	      OnSubscribeChange(true);
+	  }
 	  return true;
         }
     }
@@ -31,6 +39,7 @@ bool Publisher::Unsubscribe(Subscriber* subscriberToUnsubscribe)
         if (subscriber != nullptr && subscriber == subscriberToUnsubscribe)
         {
 	  subscriber = nullptr;
+	  OnSubscribeChange(false);
 	  return true;
         }
     }

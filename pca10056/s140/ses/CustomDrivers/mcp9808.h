@@ -27,6 +27,7 @@ class MCP9808 : public Publisher
     uint16_t GetTempInC() const;
     uint16_t ToCelcius();
     
+    void OnSubscribeChange(bool subscribeRequest) override;
 
     // MCP9808 Registers
     enum Register : uint8_t
