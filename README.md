@@ -23,15 +23,22 @@ This pattern is used for scalability: for X amount of sensors to be used (in the
 ## User Interfacing
 1) UART terminal with supported user commands alongside the view from Logic Analyzer
 
-<img width="842" alt="Screen Shot 2022-01-30 at 4 58 04 PM" src="https://user-images.githubusercontent.com/15020079/151725771-1c1c237f-89f9-4c7b-bf38-b054c9bb4dc2.png">
+<img width="993" alt="Screenshot 2023-11-13 at 8 33 34 PM" src="https://github.com/huzzziiii/smart--notifier/assets/15020079/2a61f86e-2343-4208-a6da-6a342a00e32f">
 
 Following is a zoomed-in view of a sensor reading
 <img width="1394" alt="Screen Shot 2022-01-30 at 5 06 49 PM" src="https://user-images.githubusercontent.com/15020079/151726045-053e584e-599d-4ecf-88bc-398743ea22ff.png">
 
+
+2) nRF Connect App
+   The MSB (0x13) represents the temperature value sent from the peripheral/GATT server. 
+   The (blue) highlighted button on the far-right indicates notification is enabled by the central/GATT client.
+
+![Screenshot 2023-11-13 at 8 46 03 PM](https://github.com/huzzziiii/smart--notifier/assets/15020079/21d7ed20-61da-4790-acac-89efccbfe51f)
 
 
 ## Todo
 1. The output over serial terminal seems to be lagging particularly after the scheduler kicks in. Need to investigate.
 2. Finish the Logger class
 3. Do something meaningful with the notification list -- thoughts: upload data to a server that displays the data graphically
+4. Look into why more than 1 byte is shown in the value in BLE service in nRF Connect app
 
