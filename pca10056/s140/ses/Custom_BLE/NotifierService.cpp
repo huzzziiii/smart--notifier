@@ -30,7 +30,7 @@ static uint32_t custom_value_char_add(StatusInfo * p_cus, const CustInitChar * p
     attr_md.vloc       = BLE_GATTS_VLOC_STACK;
     attr_md.rd_auth    = 0;
     attr_md.wr_auth    = 0;
-    attr_md.vlen       = 0;
+    attr_md.vlen       = 1;
 
     ble_uuid.type = p_cus->uuidType;
     ble_uuid.uuid = CUSTOM_VALUE_CHAR_UUID;
