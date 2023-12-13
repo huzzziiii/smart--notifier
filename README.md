@@ -33,7 +33,8 @@ Following is a zoomed-in view of a sensor reading
    The MSB (0x13) represents the temperature value sent from the peripheral/GATT server. 
    The (blue) highlighted button on the far-right indicates notification is enabled by the central/GATT client.
 
-![Screenshot 2023-11-13 at 8 46 03 PM](https://github.com/huzzziiii/smart--notifier/assets/15020079/21d7ed20-61da-4790-acac-89efccbfe51f)
+   ![IMG_6219](https://github.com/huzzziiii/smart--notifier/assets/15020079/04f5862a-47c7-4332-bca0-813dbad8bcc0)
+
 
 
 ## Todo
