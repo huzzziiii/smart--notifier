@@ -30,7 +30,7 @@ Following is a zoomed-in view of a sensor reading
 
 
 2) nRF Connect App
-   The MSB (0x13) represents the temperature value sent from the peripheral/GATT server. 
+   The value attribute contains 0x13 represents the temperature value sent from the peripheral/GATT server. 
    The (blue) highlighted button on the far-right indicates notification is enabled by the central/GATT client.
 
    ![IMG_6219](https://github.com/huzzziiii/smart--notifier/assets/15020079/04f5862a-47c7-4332-bca0-813dbad8bcc0)
